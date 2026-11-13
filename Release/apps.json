@@ -1,0 +1,63 @@
+{
+  "repository_url": "https://github.com/yanmingyu92/automation-studio-ios",
+  "support_contact_url": "https://github.com/yanmingyu92/automation-studio-ios/issues/new",
+  "apps": [
+    {
+      "name": "FieldReport",
+      "path": "Apps/FieldReport",
+      "scheme": "FieldReport",
+      "bundle_id": "com.automationstudio.fieldreport",
+      "sku": "fieldreport-ios",
+      "primary_category": "Business",
+      "secondary_category": "Productivity",
+      "product_ids": [
+        "fieldreport.pro.monthly",
+        "fieldreport.pro.yearly",
+        "fieldreport.pro.lifetime"
+      ],
+      "required_usage_keys": [
+        "NSMicrophoneUsageDescription",
+        "NSCameraUsageDescription"
+      ],
+      "app_store_url": null,
+      "support_url": "https://yanmingyu92.github.io/automation-studio-ios/fieldreport/support.html",
+      "privacy_url": "https://yanmingyu92.github.io/automation-studio-ios/fieldreport/privacy.html"
+    },
+    {
+      "name": "BarbellLedger",
+      "path": "Apps/BarbellLedger",
+      "scheme": "BarbellLedger",
+      "bundle_id": "com.automationstudio.barbellledger",
+      "sku": "barbellledger-ios",
+      "primary_category": "Health & Fitness",
+      "secondary_category": "Lifestyle",
+      "product_ids": [
+        "barbellledger.pro.yearly",
+        "barbellledger.pro.lifetime"
+      ],
+      "required_usage_keys": [],
+      "app_store_url": null,
+      "support_url": "https://yanmingyu92.github.io/automation-studio-ios/barbellledger/support.html",
+      "privacy_url": "https://yanmingyu92.github.io/automation-studio-ios/barbellledger/privacy.html"
+    },
+    {
+      "name": "DocKeeper",
+      "path": "Apps/DocKeeper",
+      "scheme": "DocKeeper",
+      "bundle_id": "com.automationstudio.dockeeper",
+      "sku": "dockeeper-ios",
+      "primary_category": "Productivity",
+      "secondary_category": "Utilities",
+      "product_ids": [
+        "dockeeper.pro.yearly",
+        "dockeeper.pro.lifetime"
+      ],
+      "required_usage_keys": [
+        "NSCameraUsageDescription"
+      ],
+      "app_store_url": null,
+      "support_url": "https://yanmingyu92.github.io/automation-studio-ios/dockeeper/support.html",
+      "privacy_url": "https://yanmingyu92.github.io/automation-studio-ios/dockeeper/privacy.html"
+    }
+  ]
+}

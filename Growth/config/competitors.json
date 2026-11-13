@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "country": "us",
+  "review_feed": {
+    "url_template": "https://itunes.apple.com/us/rss/customerreviews/page={page}/id={track_id}/sortby=mostrecent/json",
+    "pages": 10,
+    "maximum_supported_pages": 10
+  },
+  "http": {
+    "cache_ttl_seconds": 86400,
+    "timeout_seconds": 25,
+    "minimum_request_interval_seconds": 1.1,
+    "retries": 3,
+    "backoff_seconds": 2.0,
+    "user_agent": "GrowthMarketIntelligence/1.0 (local public-data research; read-only)"
+  },
+  "lookup_url": "https://itunes.apple.com/lookup?id={track_id}&country=us",
+  "search_url": "https://itunes.apple.com/search?{query}",
+  "search": {
+    "limit": 12,
+    "additional_per_product": 2,
+    "maximum_per_seller_per_product": 1,
+    "minimum_relevance_score": 5,
+    "scoring": {
+      "title_keyword_points": 4,
+      "description_keyword_points": 1,
+      "maximum_description_points": 8,
+      "query_occurrence_points": 1
+    }
+  },
+  "products": {
+    "FieldReport": {
+      "known_track_ids": [
+        "1672085276"
+      ],
+      "queries": [
+        {
+          "term": "site inspection report",
+          "keywords": ["inspection", "report", "photo", "site", "audit", "pdf", "contractor"]
+        },
+        {
+          "term": "field inspection photos pdf",
+          "keywords": ["field", "inspection", "report", "photo", "pdf", "punch", "construction"]
+        },
+        {
+          "term": "voice notes transcription offline",
+          "keywords": ["voice", "transcription", "notes", "offline", "speech", "dictation", "report"]
+        }
+      ]
+    },
+    "BarbellLedger": {
+      "known_track_ids": [
+        "464254577",
+        "1458862350"
+      ],
+      "queries": [
+        {
+          "term": "workout tracker strength training log",
+          "keywords": ["workout", "strength", "gym", "log", "tracker", "weightlifting", "progression"]
+        },
+        {
+          "term": "weight lifting journal progression",
+          "keywords": ["lifting", "journal", "progression", "strength", "weights", "gym", "sets"]
+        },
+        {
+          "term": "FitNotes workout log",
+          "keywords": ["fitnotes", "workout", "log", "gym", "tracker", "import", "csv"]
+        }
+      ]
+    },
+    "DocKeeper": {
+      "known_track_ids": [
+        "6448698521",
+        "6464425056",
+        "6754879528"
+      ],
+      "queries": [
+        {
+          "term": "document scanner warranty organizer",
+          "keywords": ["document", "scanner", "warranty", "organizer", "receipt", "ocr", "archive"]
+        },
+        {
+          "term": "paperless ngx documents",
+          "keywords": ["paperless", "ngx", "document", "scanner", "ocr", "archive", "dms"]
+        },
+        {
+          "term": "receipt warranty tracker",
+          "keywords": ["receipt", "warranty", "tracker", "document", "purchase", "organizer"]
+        }
+      ]
+    }
+  }
+}

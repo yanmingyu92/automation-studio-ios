@@ -1,0 +1,323 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B339EEB80D1F9BE8B7055E9 /* DocumentExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594D1A706BF43397B6255335 /* DocumentExportService.swift */; };
+		21C56656DDCFD2FC3D6659FF /* PDFPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83D69E440C4C06E5D2DF7A8 /* PDFPreviewView.swift */; };
+		28F3F34AC80083AE27C469D7 /* ProView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45315634007F6F5C61DFF197 /* ProView.swift */; };
+		2F5B6D6D2D50DEB308AED298 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506B17209D2FDBDB692F8F96 /* StoreManager.swift */; };
+		416F3A001807D2FCA07ACD2E /* DocumentRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5D7A9529F7774AA7873486 /* DocumentRecord.swift */; };
+		4E87D2D175F9D3E195733534 /* DocumentDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FAEF43232723CC7B6569AA /* DocumentDraft.swift */; };
+		4EDE7D74BB312421CEBA6712 /* VisionOCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E4EDA1C7518F275474EBF9 /* VisionOCRService.swift */; };
+		532B41B95D33202B474C4FE3 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45603E795532A7BFB82E035A /* DashboardView.swift */; };
+		54F3FF8ADA3AF335954DA41B /* DocumentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788A08FC9C68BA9C6735D4A3 /* DocumentsView.swift */; };
+		6132D45373E563CBE37DFD81 /* PaperlessSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FF723DB5230AE45FDDC543 /* PaperlessSettingsView.swift */; };
+		6F58C7ACF325773CC8442688 /* PaperlessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968667951B039E186F99C58F /* PaperlessService.swift */; };
+		70B80E39FFEB68B12E57D65A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8230274A1EA389362F909690 /* PrivacyInfo.xcprivacy */; };
+		7FAC15088211F001A8B10702 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A70DE77158B6D6F2673D1 /* DocumentDetailView.swift */; };
+		86A35034F5A383605E049ABB /* DocKeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C2E861B31D5175F4AA9C5C /* DocKeeperApp.swift */; };
+		8FE01FEEC68C0E81F1B61721 /* DocumentImportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF3E937FF8E2E2840762088 /* DocumentImportController.swift */; };
+		97614B02648A1F17E69FED05 /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7762E1B8F837668063BAE7 /* DocumentScannerView.swift */; };
+		9E3782F4A3ED3EE9DEEFB3F9 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B41974581DBBF3427A371EA /* KeychainStore.swift */; };
+		A1747461F5359833623E8EE4 /* DocumentEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81425C355D4778458E90F62 /* DocumentEditorView.swift */; };
+		ABEB77CD03D1AE8E04B71481 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C489DD35111CB5312A9B7888 /* NotificationManager.swift */; };
+		B61D4376D840C4112B805C64 /* DocumentFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5CC2165DE48FED43B3D2D1 /* DocumentFileStore.swift */; };
+		CDAC65487AA284259294BF4D /* SharedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48856BC21955E9E3E1CAD599 /* SharedComponents.swift */; };
+		DA8910F8203556CD82A9DD1C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5537FFB7C73CF971596E13D1 /* SettingsView.swift */; };
+		DE66AB29F81E463C056508A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31BA24292F0961BF3FF176E7 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0B7A70DE77158B6D6F2673D1 /* DocumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
+		31BA24292F0961BF3FF176E7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		33FF383581F2B8E4103274D1 /* DocKeeper.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DocKeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		45315634007F6F5C61DFF197 /* ProView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProView.swift; sourceTree = "<group>"; };
+		45603E795532A7BFB82E035A /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		45FAEF43232723CC7B6569AA /* DocumentDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDraft.swift; sourceTree = "<group>"; };
+		48856BC21955E9E3E1CAD599 /* SharedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedComponents.swift; sourceTree = "<group>"; };
+		506B17209D2FDBDB692F8F96 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		5537FFB7C73CF971596E13D1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		55C2E861B31D5175F4AA9C5C /* DocKeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocKeeperApp.swift; sourceTree = "<group>"; };
+		594D1A706BF43397B6255335 /* DocumentExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentExportService.swift; sourceTree = "<group>"; };
+		788A08FC9C68BA9C6735D4A3 /* DocumentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsView.swift; sourceTree = "<group>"; };
+		7C5D7A9529F7774AA7873486 /* DocumentRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentRecord.swift; sourceTree = "<group>"; };
+		8230274A1EA389362F909690 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		8B41974581DBBF3427A371EA /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		8EF3E937FF8E2E2840762088 /* DocumentImportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentImportController.swift; sourceTree = "<group>"; };
+		968667951B039E186F99C58F /* PaperlessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperlessService.swift; sourceTree = "<group>"; };
+		A83D69E440C4C06E5D2DF7A8 /* PDFPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPreviewView.swift; sourceTree = "<group>"; };
+		B2E4EDA1C7518F275474EBF9 /* VisionOCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionOCRService.swift; sourceTree = "<group>"; };
+		BA7762E1B8F837668063BAE7 /* DocumentScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerView.swift; sourceTree = "<group>"; };
+		C489DD35111CB5312A9B7888 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		CEE360C76FB3256EF91A6377 /* DocKeeper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DocKeeper.entitlements; sourceTree = "<group>"; };
+		D81425C355D4778458E90F62 /* DocumentEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentEditorView.swift; sourceTree = "<group>"; };
+		EB5CC2165DE48FED43B3D2D1 /* DocumentFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileStore.swift; sourceTree = "<group>"; };
+		F8FF723DB5230AE45FDDC543 /* PaperlessSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperlessSettingsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		5F19869AD74FB3769E38A92F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				31BA24292F0961BF3FF176E7 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6A61482C1542292F876C0084 /* DocKeeper */ = {
+			isa = PBXGroup;
+			children = (
+				CEE360C76FB3256EF91A6377 /* DocKeeper.entitlements */,
+				55C2E861B31D5175F4AA9C5C /* DocKeeperApp.swift */,
+				8230274A1EA389362F909690 /* PrivacyInfo.xcprivacy */,
+				EC9BEBD0AACF2BFF67ED1355 /* Models */,
+				5F19869AD74FB3769E38A92F /* Resources */,
+				D7FB8CE3F0245B9002E717D5 /* Services */,
+				D6173C5ACE3F35F20F9CABB8 /* Views */,
+			);
+			path = DocKeeper;
+			sourceTree = "<group>";
+		};
+		B47FBB080A4C554B5DB3EF91 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				33FF383581F2B8E4103274D1 /* DocKeeper.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D3D61DE6E9195AC43A45F9D8 = {
+			isa = PBXGroup;
+			children = (
+				6A61482C1542292F876C0084 /* DocKeeper */,
+				B47FBB080A4C554B5DB3EF91 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D6173C5ACE3F35F20F9CABB8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				45603E795532A7BFB82E035A /* DashboardView.swift */,
+				0B7A70DE77158B6D6F2673D1 /* DocumentDetailView.swift */,
+				D81425C355D4778458E90F62 /* DocumentEditorView.swift */,
+				BA7762E1B8F837668063BAE7 /* DocumentScannerView.swift */,
+				788A08FC9C68BA9C6735D4A3 /* DocumentsView.swift */,
+				F8FF723DB5230AE45FDDC543 /* PaperlessSettingsView.swift */,
+				A83D69E440C4C06E5D2DF7A8 /* PDFPreviewView.swift */,
+				45315634007F6F5C61DFF197 /* ProView.swift */,
+				5537FFB7C73CF971596E13D1 /* SettingsView.swift */,
+				48856BC21955E9E3E1CAD599 /* SharedComponents.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D7FB8CE3F0245B9002E717D5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				594D1A706BF43397B6255335 /* DocumentExportService.swift */,
+				EB5CC2165DE48FED43B3D2D1 /* DocumentFileStore.swift */,
+				8EF3E937FF8E2E2840762088 /* DocumentImportController.swift */,
+				8B41974581DBBF3427A371EA /* KeychainStore.swift */,
+				C489DD35111CB5312A9B7888 /* NotificationManager.swift */,
+				968667951B039E186F99C58F /* PaperlessService.swift */,
+				506B17209D2FDBDB692F8F96 /* StoreManager.swift */,
+				B2E4EDA1C7518F275474EBF9 /* VisionOCRService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		EC9BEBD0AACF2BFF67ED1355 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				45FAEF43232723CC7B6569AA /* DocumentDraft.swift */,
+				7C5D7A9529F7774AA7873486 /* DocumentRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		31F6FE888715716788242EE9 /* DocKeeper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4307FECA632BDA5A121B75AB /* Build configuration list for PBXNativeTarget "DocKeeper" */;
+			buildPhases = (
+				E19B9B7DB3C1D7FEFA9C9E50 /* Sources */,
+				0CEBAA1803FE321C614C6E45 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DocKeeper;
+			packageProductDependencies = (
+			);
+			productName = DocKeeper;
+			productReference = 33FF383581F2B8E4103274D1 /* DocKeeper.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C9321038BEF5FD8CF2F226BB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					31F6FE888715716788242EE9 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 2FE931EDC79929BB78E51AFE /* Build configuration list for PBXProject "DocKeeper" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D3D61DE6E9195AC43A45F9D8;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B47FBB080A4C554B5DB3EF91 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				31F6FE888715716788242EE9 /* DocKeeper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0CEBAA1803FE321C614C6E45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE66AB29F81E463C056508A2 /* Assets.xcassets in Resources */,
+				70B80E39FFEB68B12E57D65A /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E19B9B7DB3C1D7FEFA9C9E50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				532B41B95D33202B474C4FE3 /* DashboardView.swift in Sources */,
+				86A35034F5A383605E049ABB /* DocKeeperApp.swift in Sources */,
+				7FAC15088211F001A8B10702 /* DocumentDetailView.swift in Sources */,
+				4E87D2D175F9D3E195733534 /* DocumentDraft.swift in Sources */,
+				A1747461F5359833623E8EE4 /* DocumentEditorView.swift in Sources */,
+				0B339EEB80D1F9BE8B7055E9 /* DocumentExportService.swift in Sources */,
+				B61D4376D840C4112B805C64 /* DocumentFileStore.swift in Sources */,
+				8FE01FEEC68C0E81F1B61721 /* DocumentImportController.swift in Sources */,
+				416F3A001807D2FCA07ACD2E /* DocumentRecord.swift in Sources */,
+				97614B02648A1F17E69FED05 /* DocumentScannerView.swift in Sources */,
+				54F3FF8ADA3AF335954DA41B /* DocumentsView.swift in Sources */,
+				9E3782F4A3ED3EE9DEEFB3F9 /* KeychainStore.swift in Sources */,
+				ABEB77CD03D1AE8E04B71481 /* NotificationManager.swift in Sources */,
+				21C56656DDCFD2FC3D6659FF /* PDFPreviewView.swift in Sources */,
+				6F58C7ACF325773CC8442688 /* PaperlessService.swift in Sources */,
+				6132D45373E563CBE37DFD81 /* PaperlessSettingsView.swift in Sources */,
+				28F3F34AC80083AE27C469D7 /* ProView.swift in Sources */,
+				DA8910F8203556CD82A9DD1C /* SettingsView.swift in Sources */,
+				CDAC65487AA284259294BF4D /* SharedComponents.swift in Sources */,
+				2F5B6D6D2D50DEB308AED298 /* StoreManager.swift in Sources */,
+				4EDE7D74BB312421CEBA6712 /* VisionOCRService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		571C5C2EF1922865DA11D8CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DocKeeper/DocKeeper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = DocKeeper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.automationstudio.dockeeper;
+				PRODUCT_NAME = DocKeeper;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6A782F7C4BE606EB07388317 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DocKeeper/DocKeeper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = DocKeeper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.automationstudio.dockeeper;
+				PRODUCT_NAME = DocKeeper;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7A58903443193109122D4E43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		7C115449FDFF7B6F6590E2CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2FE931EDC79929BB78E51AFE /* Build configuration list for PBXProject "DocKeeper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A58903443193109122D4E43 /* Debug */,
+				7C115449FDFF7B6F6590E2CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4307FECA632BDA5A121B75AB /* Build configuration list for PBXNativeTarget "DocKeeper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A782F7C4BE606EB07388317 /* Debug */,
+				571C5C2EF1922865DA11D8CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C9321038BEF5FD8CF2F226BB /* Project object */;
+}

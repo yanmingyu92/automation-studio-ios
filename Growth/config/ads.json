@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "mode": "dry_run_recommendations_only",
+  "strategy": "Use discovery campaigns to find search terms, graduate terms with demonstrated conversions to exact match, retain controlled broad-match exploration, and reduce bids or flag negatives only after sufficient evidence. No ad API or spending is used.",
+  "target_cpa": 20.0,
+  "budget_cap": 500.0,
+  "currency": "USD",
+  "minimum_bid": 0.2,
+  "maximum_bid": 5.0,
+  "bid_increment": 0.1,
+  "maximum_bid_increase_fraction": 0.15,
+  "maximum_bid_decrease_fraction": 0.25,
+  "minimum_taps_for_conversion_assessment": 20,
+  "minimum_conversions_for_exact": 2,
+  "minimum_spend_for_negative_review": 40.0,
+  "low_ctr_threshold": 0.01,
+  "minimum_impressions_for_ctr_assessment": 500,
+  "column_aliases": {
+    "search_term": ["Search Term", "Search Terms", "Term"],
+    "campaign": ["Campaign", "Campaign Name"],
+    "ad_group": ["Ad Group", "Ad Group Name"],
+    "match_type": ["Match Type", "Keyword Match Type"],
+    "keyword": ["Keyword"],
+    "impressions": ["Impressions", "Imps"],
+    "taps": ["Taps", "Clicks"],
+    "conversions": ["Conversions", "New Downloads", "Downloads"],
+    "spend": ["Spend", "Cost", "Total Spend"],
+    "bid": ["Bid", "Max CPT Bid", "Default Max CPT Bid"]
+  },
+  "metric_formulas": {
+    "ctr": "taps / impressions when both columns exist and impressions > 0",
+    "conversion_rate": "conversions / taps when both columns exist and taps > 0",
+    "cpa": "spend / conversions when both columns exist and conversions > 0"
+  },
+  "decision_rules": [
+    "At least minimum_conversions_for_exact conversions and CPA at or below target_cpa: recommend adding or retaining exact match and raise an available bid incrementally, capped by maximum_bid and maximum_bid_increase_fraction.",
+    "Converting terms without a reliable CPA retain exact-match recommendations but do not receive an increase.",
+    "Terms with at least minimum_taps_for_conversion_assessment taps, zero conversions, and spend at or above minimum_spend_for_negative_review: recommend exact-match negative review in discovery/broad and decrease an available bid; no automatic exclusion occurs.",
+    "Terms with taps but insufficient conversions remain broad/discovery candidates with no bid increase.",
+    "If total spend is at or above budget_cap, suppress all increases and recommend holding or reducing bids.",
+    "Low CTR is reported only with enough impressions; it informs review rather than acting as a standalone pause rule."
+  ]
+}

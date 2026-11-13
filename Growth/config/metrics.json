@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generated_output_label": "Computed only from the supplied CSV; unavailable metrics are omitted from available_metrics and explained in unavailable_metrics. No simulated results.",
+  "input_assumptions": [
+    "Rows must cover a single coherent observation period or non-overlapping additive records. Count and currency columns are summed.",
+    "Do not combine overlapping App Store and RevenueCat exports in one file; use one source per invocation to avoid double counting.",
+    "Snapshot subscriber counts must already be aggregated for the observation period. Retention requires matching retained-user and cohort-size columns.",
+    "Payback uses the observation-window approximation acquisition_spend / net_revenue * observation_days; it is not cohort lifetime value or a forecast."
+  ],
+  "column_aliases": {
+    "variant": ["Variant", "Experiment Variant", "Cohort Variant", "Campaign Variant"],
+    "date": ["Date", "Day", "Period Start", "Start Date", "Transaction Date"],
+    "impressions": ["Impressions", "Product Page Impressions"],
+    "product_page_views": ["Product Page Views", "App Store Product Page Views", "Page Views"],
+    "downloads": ["First-Time Downloads", "First Time Downloads", "Downloads", "Units", "Installs", "App Units"],
+    "paying_users": ["Paying Users", "Purchasers", "New Customers", "Customers", "Paying Subscribers"],
+    "trial_starts": ["Trial Starts", "Trials Started", "Free Trials"],
+    "trial_conversions": ["Trial Conversions", "Converted Trials", "Trials Converted"],
+    "gross_revenue": ["Gross Revenue", "Revenue", "Sales", "Total Revenue", "Customer Price"],
+    "refunds": ["Refunds", "Refund Amount", "Returned Revenue"],
+    "net_revenue": ["Net Revenue", "Proceeds", "Developer Proceeds", "Estimated Proceeds"],
+    "acquisition_spend": ["Acquisition Spend", "Ad Spend", "Spend", "Cost"],
+    "cohort_users": ["Cohort Users", "Cohort Size", "Install Cohort", "Retention Cohort Users"],
+    "retained_day_1": ["Retained Day 1", "Day 1 Retained", "D1 Retained Users", "Active Day 1"],
+    "retained_day_7": ["Retained Day 7", "Day 7 Retained", "D7 Retained Users", "Active Day 7"],
+    "retained_day_30": ["Retained Day 30", "Day 30 Retained", "D30 Retained Users", "Active Day 30"],
+    "monthly_subscribers": ["Monthly Subscribers", "Monthly Subscriptions", "Monthly Plan Customers"],
+    "annual_subscribers": ["Annual Subscribers", "Yearly Subscribers", "Annual Subscriptions", "Yearly Plan Customers"],
+    "lifetime_subscribers": ["Lifetime Subscribers", "Lifetime Purchases", "Lifetime Plan Customers"]
+  },
+  "metric_formulas": {
+    "product_page_conversion": "downloads / product_page_views",
+    "install_to_purchase_conversion": "paying_users / downloads",
+    "trial_conversion": "trial_conversions / trial_starts",
+    "retention_day_1": "retained_day_1 / cohort_users",
+    "retention_day_7": "retained_day_7 / cohort_users",
+    "retention_day_30": "retained_day_30 / cohort_users",
+    "revenue_per_install": "revenue / downloads using net_revenue when present, gross_revenue - refunds when both are present, or gross_revenue otherwise; calculation_context records the basis",
+    "annual_subscription_mix": "annual_subscribers / (monthly_subscribers + annual_subscribers + lifetime_subscribers)",
+    "lifetime_subscription_mix": "lifetime_subscribers / (monthly_subscribers + annual_subscribers + lifetime_subscribers)",
+    "customer_acquisition_cost": "acquisition_spend / paying_users",
+    "refund_rate": "abs(refunds) / gross_revenue when both columns exist and gross_revenue > 0",
+    "payback_days": "acquisition_spend / net_revenue * observation_days; net_revenue requires a net/proceeds column or gross_revenue and refunds"
+  },
+  "decision_thresholds": {
+    "minimum_scale_signals": 2,
+    "conversion_metric_priority": ["install_to_purchase_conversion", "product_page_conversion", "trial_conversion"],
+    "conversion": {
+      "scale_at_or_above": 0.08,
+      "stop_below": 0.01
+    },
+    "retention_day_30": {
+      "scale_at_or_above": 0.20,
+      "stop_below": 0.05
+    },
+    "payback_days": {
+      "scale_at_or_below": 90,
+      "stop_above": 180
+    },
+    "rules": [
+      "STOP when any available configured stop threshold is crossed.",
+      "SCALE only when no stop rule fires, at least minimum_scale_signals decision signals are available, and every available decision signal meets its scale threshold.",
+      "ITERATE when decision signals exist but scale and stop conditions are not met.",
+      "INSUFFICIENT_DATA when no configured decision signal is available."
+    ]
+  }
+}

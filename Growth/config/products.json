@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "generated_copy_label": "Generated positioning and experiment copy. Product capabilities are limited to this configuration; review themes are public-competitor observations, not this product's customer evidence.",
+  "products": {
+    "FieldReport": {
+      "slug": "fieldreport",
+      "category": "offline field-inspection voice reports",
+      "app_store_url": "",
+      "app_store_status": "UNCONFIGURED — supply a real App Store URL in config/products.json before publishing any link.",
+      "audience": "Inspectors, contractors, and field teams who need to document site visits.",
+      "problem": "Turning field notes and site photos into a clear inspection report can be slow, especially where connectivity is unreliable.",
+      "value_proposition": "Capture voice notes and photos offline, then organize them into an inspection PDF report.",
+      "truthful_claims": [
+        "Voice and photo capture for field inspections",
+        "Offline-first report creation",
+        "PDF inspection reports",
+        "No account required for the core workflow"
+      ],
+      "feature_details": [
+        {
+          "title": "Speak through the site visit",
+          "text": "Capture inspection observations as voice notes while you work."
+        },
+        {
+          "title": "Keep photos with the report",
+          "text": "Organize site photos alongside the observations they support."
+        },
+        {
+          "title": "Create a PDF without a backend",
+          "text": "Build an inspection report on-device with an offline-first workflow."
+        }
+      ],
+      "aso": {
+        "name": "FieldReport: Site Reports",
+        "subtitle": "Voice notes to PDF offline",
+        "keyword_list": ["inspection", "field report", "site audit", "voice notes", "photo report", "offline pdf", "contractor"],
+        "promotional_text": "Document site visits with voice notes, photos, and PDF reports in an offline-first workflow."
+      },
+      "custom_product_pages": [
+        {
+          "id": "offline-inspection",
+          "audience": "Field professionals working in low-connectivity locations",
+          "keyword_focus": "offline inspection report",
+          "headline": "Keep the inspection moving, even offline.",
+          "subheadline": "Capture voice notes and site photos, then assemble a PDF report on-device.",
+          "related_theme": "offline",
+          "screenshots": ["Offline capture screen with connectivity state", "Voice note attached to an inspection item", "PDF preview showing photos and observations"]
+        },
+        {
+          "id": "voice-to-pdf",
+          "audience": "Inspectors who prefer speaking over typing on-site",
+          "keyword_focus": "voice inspection report",
+          "headline": "From spoken observations to a report.",
+          "subheadline": "Organize field voice notes and photos into an inspection PDF.",
+          "related_theme": "voice_transcription",
+          "screenshots": ["Voice capture control and permission state", "Observation review and editing", "Report export choices"]
+        },
+        {
+          "id": "photo-documentation",
+          "audience": "Contractors documenting visual site evidence",
+          "keyword_focus": "photo inspection PDF",
+          "headline": "Keep every site photo in context.",
+          "subheadline": "Connect photos and field observations in one report workflow.",
+          "related_theme": "photo_reporting",
+          "screenshots": ["Photo attachment flow", "Inspection item with visual context", "Completed PDF report preview"]
+        }
+      ]
+    },
+    "BarbellLedger": {
+      "slug": "barbellledger",
+      "category": "private strength-training log",
+      "app_store_url": "",
+      "app_store_status": "UNCONFIGURED — supply a real App Store URL in config/products.json before publishing any link.",
+      "audience": "Strength trainees who want a private log and a clear view of progression.",
+      "problem": "Moving an existing training history and deciding how to progress should not require rebuilding a log or surrendering privacy.",
+      "value_proposition": "Log strength training offline, import FitNotes CSV history, and review progression without an account.",
+      "truthful_claims": [
+        "Offline strength-training log",
+        "FitNotes CSV migration",
+        "Progression tracking",
+        "Private, account-free core workflow"
+      ],
+      "feature_details": [
+        {
+          "title": "Log sets without friction",
+          "text": "Record strength sessions in a focused, offline training log."
+        },
+        {
+          "title": "Bring your FitNotes history",
+          "text": "Migrate an existing FitNotes CSV instead of starting from an empty log."
+        },
+        {
+          "title": "See how training progresses",
+          "text": "Review strength progression while keeping the core workflow private and account-free."
+        }
+      ],
+      "aso": {
+        "name": "BarbellLedger: Workout Log",
+        "subtitle": "Private strength progression",
+        "keyword_list": ["strength log", "workout tracker", "fitnotes", "weight lifting", "gym journal", "progression", "offline"]
+      },
+      "custom_product_pages": [
+        {
+          "id": "fitnotes-migration",
+          "audience": "FitNotes users considering a move to iOS",
+          "keyword_focus": "FitNotes CSV import",
+          "headline": "Bring your training history with you.",
+          "subheadline": "Import FitNotes CSV data into a private, offline strength log.",
+          "related_theme": "import_migration",
+          "screenshots": ["FitNotes CSV import entry point", "Import validation and error handling", "Imported training history"]
+        },
+        {
+          "id": "progression",
+          "audience": "Lifters focused on consistent progression",
+          "keyword_focus": "strength progression tracker",
+          "headline": "A clear log for the work you repeat.",
+          "subheadline": "Record sessions offline and review your strength progression.",
+          "related_theme": "progression",
+          "screenshots": ["Set logging flow", "Exercise history", "Progression view"]
+        },
+        {
+          "id": "private-offline-log",
+          "audience": "People who prefer an account-free training log",
+          "keyword_focus": "offline workout log",
+          "headline": "Your training log, without an account.",
+          "subheadline": "Keep the core strength-logging workflow private and available offline.",
+          "related_theme": "privacy_ads",
+          "screenshots": ["Offline session logging", "Local training history", "Data export control"]
+        }
+      ]
+    },
+    "DocKeeper": {
+      "slug": "dockeeper",
+      "category": "local document and warranty manager",
+      "app_store_url": "",
+      "app_store_status": "UNCONFIGURED — supply a real App Store URL in config/products.json before publishing any link.",
+      "audience": "People organizing receipts, warranties, and household documents, including Paperless-ngx users.",
+      "problem": "Important documents are easy to lose across camera rolls, email, and paper files, while warranty dates are easy to forget.",
+      "value_proposition": "Capture documents with OCR, organize warranties locally, and optionally sync with a Paperless-ngx server you choose.",
+      "truthful_claims": [
+        "OCR document capture",
+        "Local document and warranty organization",
+        "Optional Paperless-ngx synchronization",
+        "No account required for local document management"
+      ],
+      "feature_details": [
+        {
+          "title": "Make paper documents searchable",
+          "text": "Use OCR capture to turn receipts and documents into organized records."
+        },
+        {
+          "title": "Keep warranty details together",
+          "text": "Manage warranty information alongside the documents that support it."
+        },
+        {
+          "title": "Connect Paperless-ngx only if you choose",
+          "text": "Keep management local by default, with optional synchronization to your own server."
+        }
+      ],
+      "aso": {
+        "name": "DocKeeper: Document Vault",
+        "subtitle": "OCR receipts and warranties",
+        "keyword_list": ["document manager", "warranty tracker", "receipt scanner", "ocr", "paperless ngx", "home inventory", "offline"]
+      },
+      "custom_product_pages": [
+        {
+          "id": "warranty-organizer",
+          "audience": "Households tracking purchase documents and warranties",
+          "keyword_focus": "warranty receipt organizer",
+          "headline": "Keep the warranty with the proof of purchase.",
+          "subheadline": "Capture and organize receipts, documents, and warranty details locally.",
+          "related_theme": "warranty_organization",
+          "screenshots": ["Warranty record with receipt attached", "Document collection organization", "Search and filtering"]
+        },
+        {
+          "id": "paperless-sync",
+          "audience": "People already running Paperless-ngx",
+          "keyword_focus": "Paperless-ngx iOS documents",
+          "headline": "A document companion for your Paperless-ngx setup.",
+          "subheadline": "Manage documents locally and optionally synchronize with your chosen server.",
+          "related_theme": "sync",
+          "screenshots": ["Explicit server connection setup", "Recoverable synchronization status", "Local document library"]
+        },
+        {
+          "id": "ocr-capture",
+          "audience": "People digitizing paper records",
+          "keyword_focus": "OCR document scanner",
+          "headline": "Turn paper into an organized document record.",
+          "subheadline": "Capture documents with OCR and keep warranty information close at hand.",
+          "related_theme": "ocr_capture",
+          "screenshots": ["Document camera capture", "OCR text review", "Saved document with warranty metadata"]
+        }
+      ]
+    }
+  }
+}

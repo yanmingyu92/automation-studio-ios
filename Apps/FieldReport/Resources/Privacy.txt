@@ -1,0 +1,21 @@
+FIELDREPORT PRIVACY
+
+FieldReport is designed to work without an account, advertising, analytics, or a FieldReport server. Projects, findings, photos, audio recordings, transcripts, and business details are stored locally on your device using Apple storage technologies.
+
+MICROPHONE AND PHOTOS
+Microphone access is used only when you start a recording. Camera and photo access are used only when you capture or choose inspection photos. You can deny these permissions and still create and export manual findings. Permission settings can be changed in iOS Settings.
+
+ON-DEVICE TRANSCRIPTION
+Speech transcription runs locally with WhisperKit after you explicitly download and load a speech model. Audio is not sent to a transcription service. Downloading a model requires a network connection to the public model repository used by Argmax WhisperKit (Hugging Face). The download contains model files, not your recordings or project data. After setup, transcription can run offline. Keep FieldReport open during transcription; unrestricted background processing is not promised.
+
+PDFS AND SHARING
+Reports are generated on your device. A report leaves FieldReport only when you choose a destination in the standard iOS share sheet. Review customer and site information before sharing. Anyone receiving an exported report can retain or redistribute it.
+
+PURCHASES
+Subscriptions and purchases are handled by Apple through StoreKit. FieldReport receives product and entitlement status from Apple, not your payment card details. Restoring purchases and purchasing require network access and App Store Connect products configured by the developer.
+
+DATA CONTROL
+You can delete findings, photos, recordings, projects, and downloaded speech models in the app. Deletion is permanent. Device backups, if enabled, are managed by iOS and your Apple settings. Protect your device with a passcode and use appropriate customer retention practices.
+
+THIRD PARTIES
+FieldReport includes the MIT-licensed Argmax WhisperKit library and its attributed dependencies. See Third-Party Licenses for notices. FieldReport does not include third-party analytics or advertising SDKs.

@@ -1,0 +1,329 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1029A1738ECBBADCEC9BB2AB /* FitNotesCSVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22113A7578B6D6ABF8180CF0 /* FitNotesCSVService.swift */; };
+		10DA5B69687341616AC52C1B /* RoutineViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3166880A94C6911F2AA23DE1 /* RoutineViews.swift */; };
+		13313862629161A1DF264A27 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0606CDE212E756CEC14B2E /* AnalyticsView.swift */; };
+		46385272CFD3D8E1B76DFF96 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA153F93685D5D110350DC5 /* RootView.swift */; };
+		62182C64BD4C6A5C9C7E2FF7 /* SetEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C7F109943D724798FC81FA /* SetEditorView.swift */; };
+		626B1742F86A7D362E36920F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8161D5E4D6394092DD7A7A8 /* SettingsView.swift */; };
+		6D7561B0BB9FF4E9DEC88C65 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7D5C93451E8F6BC181A01F6 /* Assets.xcassets */; };
+		7A12D6AFFD77987BEFB3579F /* ImportExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83FF1CA6FDDD3463DA2BAD8 /* ImportExportView.swift */; };
+		8A03C20B4CF8CE3C1F983C5A /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E40A3895362B93D9E9A708 /* PaywallView.swift */; };
+		9742CF6FF2BEF0BDD93C2B0F /* RestTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0368995F447B1D4B75A11881 /* RestTimerManager.swift */; };
+		9BD0609F955ACC0646BE4A84 /* PlateCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2F95A65A03D80497DAD234 /* PlateCalculatorView.swift */; };
+		9F1B6D7C1F6FD27899C5BFFF /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B8545D2402E8F23ED455D0 /* Components.swift */; };
+		B665263F06E968962AEFC4BD /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F0E1E34F325991E948735D /* AnalyticsService.swift */; };
+		BD4A12D500F679D2DCF125E2 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A33FC5AE922DE35C488501 /* Formatting.swift */; };
+		C5CE24AE63040B085E41862F /* WorkoutSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652B432EB099327C312896E2 /* WorkoutSessionView.swift */; };
+		CE5E8709407BD34C2B861DA9 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB16A4EAE04D4EF8F283A4B0 /* StoreManager.swift */; };
+		DBF031E30BBF92A149D4A8AB /* BarbellLedgerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9219A8FF9EAF528E4292B23A /* BarbellLedgerApp.swift */; };
+		EA0560FE54DD1BABD9EAEBD6 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BD6557585426C4B861BA4D /* DashboardView.swift */; };
+		ECB23861008B7AF7C71D4464 /* ExerciseViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F2BE0C4B57036FF58B1E67 /* ExerciseViews.swift */; };
+		EE1602F6D84EE9DA4C657CFF /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C84EAB17D9E343032B9CFC3 /* DataController.swift */; };
+		EF35CC561F7F64C72DD56F4F /* BarbellLedgerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D569E90DFCB2AAAEABD35EBB /* BarbellLedgerModels.swift */; };
+		F122DFD6720F229E5B63666F /* ProgressionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23755AA95A2756789065CC92 /* ProgressionEngine.swift */; };
+		F9D3CC3ED65FB29502D10B2C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 226A483350FB7E064CFD2C5C /* PrivacyInfo.xcprivacy */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0368995F447B1D4B75A11881 /* RestTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerManager.swift; sourceTree = "<group>"; };
+		1E0606CDE212E756CEC14B2E /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
+		22113A7578B6D6ABF8180CF0 /* FitNotesCSVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitNotesCSVService.swift; sourceTree = "<group>"; };
+		226A483350FB7E064CFD2C5C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		23755AA95A2756789065CC92 /* ProgressionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionEngine.swift; sourceTree = "<group>"; };
+		24E40A3895362B93D9E9A708 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		3166880A94C6911F2AA23DE1 /* RoutineViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineViews.swift; sourceTree = "<group>"; };
+		3F865363A442CDA627A17657 /* BarbellLedger.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BarbellLedger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53F0E1E34F325991E948735D /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		64A33FC5AE922DE35C488501 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
+		652B432EB099327C312896E2 /* WorkoutSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionView.swift; sourceTree = "<group>"; };
+		8C84EAB17D9E343032B9CFC3 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		9219A8FF9EAF528E4292B23A /* BarbellLedgerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarbellLedgerApp.swift; sourceTree = "<group>"; };
+		B6BD6557585426C4B861BA4D /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		B6F2BE0C4B57036FF58B1E67 /* ExerciseViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViews.swift; sourceTree = "<group>"; };
+		BC2F95A65A03D80497DAD234 /* PlateCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlateCalculatorView.swift; sourceTree = "<group>"; };
+		BFA153F93685D5D110350DC5 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		C8161D5E4D6394092DD7A7A8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C83FF1CA6FDDD3463DA2BAD8 /* ImportExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportView.swift; sourceTree = "<group>"; };
+		CB16A4EAE04D4EF8F283A4B0 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		D569E90DFCB2AAAEABD35EBB /* BarbellLedgerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarbellLedgerModels.swift; sourceTree = "<group>"; };
+		D7D5C93451E8F6BC181A01F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D8C7F109943D724798FC81FA /* SetEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetEditorView.swift; sourceTree = "<group>"; };
+		E3B8545D2402E8F23ED455D0 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		F84FBFEF6D6131489920ADBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		070CC6B60C5F8CF83FBB8EA2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D569E90DFCB2AAAEABD35EBB /* BarbellLedgerModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		41995674D0EE01381EE4A151 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D7D5C93451E8F6BC181A01F6 /* Assets.xcassets */,
+				226A483350FB7E064CFD2C5C /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		43D98CCBC7BF9BFBA389D31E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1E0606CDE212E756CEC14B2E /* AnalyticsView.swift */,
+				E3B8545D2402E8F23ED455D0 /* Components.swift */,
+				B6BD6557585426C4B861BA4D /* DashboardView.swift */,
+				B6F2BE0C4B57036FF58B1E67 /* ExerciseViews.swift */,
+				C83FF1CA6FDDD3463DA2BAD8 /* ImportExportView.swift */,
+				24E40A3895362B93D9E9A708 /* PaywallView.swift */,
+				BC2F95A65A03D80497DAD234 /* PlateCalculatorView.swift */,
+				BFA153F93685D5D110350DC5 /* RootView.swift */,
+				3166880A94C6911F2AA23DE1 /* RoutineViews.swift */,
+				D8C7F109943D724798FC81FA /* SetEditorView.swift */,
+				C8161D5E4D6394092DD7A7A8 /* SettingsView.swift */,
+				652B432EB099327C312896E2 /* WorkoutSessionView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		53C89E40F6E34EC886D78D44 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F865363A442CDA627A17657 /* BarbellLedger.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		575C823BA519C78512B8A0FA /* BarbellLedger */ = {
+			isa = PBXGroup;
+			children = (
+				9219A8FF9EAF528E4292B23A /* BarbellLedgerApp.swift */,
+				F84FBFEF6D6131489920ADBB /* Info.plist */,
+				070CC6B60C5F8CF83FBB8EA2 /* Models */,
+				41995674D0EE01381EE4A151 /* Resources */,
+				D4585485E5ED41E26216594B /* Services */,
+				B3F1687B2115BEA72E6016DE /* Utilities */,
+				43D98CCBC7BF9BFBA389D31E /* Views */,
+			);
+			path = BarbellLedger;
+			sourceTree = "<group>";
+		};
+		B3F1687B2115BEA72E6016DE /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				64A33FC5AE922DE35C488501 /* Formatting.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		D4585485E5ED41E26216594B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				53F0E1E34F325991E948735D /* AnalyticsService.swift */,
+				8C84EAB17D9E343032B9CFC3 /* DataController.swift */,
+				22113A7578B6D6ABF8180CF0 /* FitNotesCSVService.swift */,
+				23755AA95A2756789065CC92 /* ProgressionEngine.swift */,
+				0368995F447B1D4B75A11881 /* RestTimerManager.swift */,
+				CB16A4EAE04D4EF8F283A4B0 /* StoreManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F15880F6A263513498A870C8 = {
+			isa = PBXGroup;
+			children = (
+				575C823BA519C78512B8A0FA /* BarbellLedger */,
+				53C89E40F6E34EC886D78D44 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		828AD7F5ECEEFE46D9C4571A /* BarbellLedger */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D70707BB61D9E9E3008E59E /* Build configuration list for PBXNativeTarget "BarbellLedger" */;
+			buildPhases = (
+				C75A11A0DABBAB6BBCD380EB /* Sources */,
+				90D63295A7183B368538E3BA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BarbellLedger;
+			packageProductDependencies = (
+			);
+			productName = BarbellLedger;
+			productReference = 3F865363A442CDA627A17657 /* BarbellLedger.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C1C99DF90D5DC9DF746C692C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					828AD7F5ECEEFE46D9C4571A = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 3B1EF066DA466353E77882D4 /* Build configuration list for PBXProject "BarbellLedger" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F15880F6A263513498A870C8;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 53C89E40F6E34EC886D78D44 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				828AD7F5ECEEFE46D9C4571A /* BarbellLedger */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		90D63295A7183B368538E3BA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D7561B0BB9FF4E9DEC88C65 /* Assets.xcassets in Resources */,
+				F9D3CC3ED65FB29502D10B2C /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C75A11A0DABBAB6BBCD380EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B665263F06E968962AEFC4BD /* AnalyticsService.swift in Sources */,
+				13313862629161A1DF264A27 /* AnalyticsView.swift in Sources */,
+				DBF031E30BBF92A149D4A8AB /* BarbellLedgerApp.swift in Sources */,
+				EF35CC561F7F64C72DD56F4F /* BarbellLedgerModels.swift in Sources */,
+				9F1B6D7C1F6FD27899C5BFFF /* Components.swift in Sources */,
+				EA0560FE54DD1BABD9EAEBD6 /* DashboardView.swift in Sources */,
+				EE1602F6D84EE9DA4C657CFF /* DataController.swift in Sources */,
+				ECB23861008B7AF7C71D4464 /* ExerciseViews.swift in Sources */,
+				1029A1738ECBBADCEC9BB2AB /* FitNotesCSVService.swift in Sources */,
+				BD4A12D500F679D2DCF125E2 /* Formatting.swift in Sources */,
+				7A12D6AFFD77987BEFB3579F /* ImportExportView.swift in Sources */,
+				8A03C20B4CF8CE3C1F983C5A /* PaywallView.swift in Sources */,
+				9BD0609F955ACC0646BE4A84 /* PlateCalculatorView.swift in Sources */,
+				F122DFD6720F229E5B63666F /* ProgressionEngine.swift in Sources */,
+				9742CF6FF2BEF0BDD93C2B0F /* RestTimerManager.swift in Sources */,
+				46385272CFD3D8E1B76DFF96 /* RootView.swift in Sources */,
+				10DA5B69687341616AC52C1B /* RoutineViews.swift in Sources */,
+				62182C64BD4C6A5C9C7E2FF7 /* SetEditorView.swift in Sources */,
+				626B1742F86A7D362E36920F /* SettingsView.swift in Sources */,
+				CE5E8709407BD34C2B861DA9 /* StoreManager.swift in Sources */,
+				C5CE24AE63040B085E41862F /* WorkoutSessionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0715FB2C89E990864636513D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BarbellLedger/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.automationstudio.barbellledger;
+				PRODUCT_NAME = BarbellLedger;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		36CCD43DF52F9EB478F4A0FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A2312982EEC47E5166DCB6A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		FD7DE6F7778E967B8658873E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = BarbellLedger/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.automationstudio.barbellledger;
+				PRODUCT_NAME = BarbellLedger;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0D70707BB61D9E9E3008E59E /* Build configuration list for PBXNativeTarget "BarbellLedger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0715FB2C89E990864636513D /* Debug */,
+				FD7DE6F7778E967B8658873E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3B1EF066DA466353E77882D4 /* Build configuration list for PBXProject "BarbellLedger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2312982EEC47E5166DCB6A9 /* Debug */,
+				36CCD43DF52F9EB478F4A0FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C1C99DF90D5DC9DF746C692C /* Project object */;
+}

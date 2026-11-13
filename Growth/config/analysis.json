@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "generated_output_label": "Generated local inference from public reviews; not survey respondents, representative market research, customer evidence, or a revenue forecast.",
+  "low_rating_threshold": 2,
+  "pain_rating_maximum": 3,
+  "product_themes": {
+    "FieldReport": ["reliability", "sync", "offline", "export_sharing", "voice_transcription", "import_migration", "onboarding_usability", "pricing_subscription", "privacy_ads", "photo_reporting"],
+    "BarbellLedger": ["reliability", "sync", "offline", "export_sharing", "import_migration", "progression", "onboarding_usability", "pricing_subscription", "privacy_ads"],
+    "DocKeeper": ["reliability", "sync", "offline", "export_sharing", "ocr_capture", "import_migration", "onboarding_usability", "pricing_subscription", "privacy_ads", "warranty_organization"]
+  },
+  "maximum_low_rating_records": 200,
+  "maximum_ngrams_per_product": 30,
+  "maximum_review_ids_per_item": 100,
+  "ngrams": {
+    "sizes": [1, 2, 3],
+    "minimum_review_count": 2,
+    "stop_words": [
+      "a", "about", "after", "all", "also", "am", "an", "and", "any", "app", "application", "are", "as", "at", "be", "because", "been", "before", "being", "best", "but", "by", "can", "could", "did", "do", "does", "doing", "don", "down", "each", "even", "for", "from", "get", "got", "had", "has", "have", "he", "her", "here", "him", "his", "how", "i", "if", "im", "in", "into", "is", "it", "its", "just", "like", "me", "more", "most", "my", "no", "not", "now", "of", "on", "one", "only", "or", "other", "our", "out", "over", "really", "s", "she", "so", "some", "still", "t", "than", "that", "the", "their", "them", "then", "there", "these", "they", "this", "those", "through", "to", "too", "up", "use", "used", "using", "very", "was", "we", "were", "what", "when", "where", "which", "while", "who", "will", "with", "would", "you", "your"
+    ]
+  },
+  "themes": {
+    "reliability": {
+      "label": "Crashes, bugs, and unreliable behavior",
+      "ratings_maximum": 3,
+      "phrases": ["crash", "crashes", "bug", "buggy", "glitch", "freeze", "frozen", "doesnt work", "does not work", "not working", "lost my", "data loss", "deleted", "unusable", "broken"]
+    },
+    "sync": {
+      "label": "Synchronization and multi-device continuity",
+      "ratings_maximum": 3,
+      "phrases": ["sync", "synchron", "icloud", "backup", "restore", "other device", "multiple devices", "server", "upload failed"]
+    },
+    "offline": {
+      "label": "Offline access and connectivity",
+      "ratings_maximum": 5,
+      "phrases": ["offline", "without internet", "no internet", "connection", "connectivity", "airplane mode", "online only"]
+    },
+    "export_sharing": {
+      "label": "Export, PDF, and sharing workflow",
+      "ratings_maximum": 5,
+      "phrases": ["export", "pdf", "share", "sharing", "print", "csv", "download my", "email report", "file format"]
+    },
+    "voice_transcription": {
+      "label": "Voice capture and transcription quality",
+      "ratings_maximum": 5,
+      "phrases": ["transcription", "transcribe", "voice", "dictation", "speech to text", "microphone", "accuracy", "accurate", "recording"]
+    },
+    "ocr_capture": {
+      "label": "Scanning, OCR, and document capture",
+      "ratings_maximum": 5,
+      "phrases": ["ocr", "scan", "scanner", "scanning", "text recognition", "camera", "cropping", "document detection", "searchable"]
+    },
+    "import_migration": {
+      "label": "Import and migration from existing logs",
+      "ratings_maximum": 5,
+      "phrases": ["import", "migrate", "migration", "csv", "fitnotes", "transfer", "move my", "previous app", "old data"]
+    },
+    "progression": {
+      "label": "Strength progression and training guidance",
+      "ratings_maximum": 5,
+      "phrases": ["progression", "progressive overload", "plateau", "personal record", " pr ", "one rep max", "1rm", "next weight", "training plan", "routine"]
+    },
+    "onboarding_usability": {
+      "label": "Onboarding and everyday usability",
+      "ratings_maximum": 3,
+      "phrases": ["onboarding", "hard to use", "difficult to use", "confusing", "learning curve", "intuitive", "not intuitive", "tutorial", "sign up", "login", "log in", "account", "setup", "set up", "too many steps"]
+    },
+    "pricing_subscription": {
+      "label": "Pricing, paywalls, and subscriptions",
+      "ratings_maximum": 3,
+      "phrases": ["subscription", "subscribe", "price", "pricing", "expensive", "paywall", "pay wall", "monthly fee", "yearly fee", "annual", "lifetime", "refund", "free trial", "trial ended", "money", "cost", "purchase", "paid", "pay for", "bucks", "not worth", "spent"]
+    },
+    "privacy_ads": {
+      "label": "Privacy, tracking, and advertising",
+      "ratings_maximum": 3,
+      "phrases": ["privacy", "tracking", "trackers", "data collection", "ads", "adverts", "advertising", "sell my data", "third party"]
+    },
+    "warranty_organization": {
+      "label": "Warranty, receipt, and document organization",
+      "ratings_maximum": 5,
+      "phrases": ["warranty", "receipt", "document", "folder", "tag", "tags", "search", "organize", "organise", "reminder", "expiration", "expiry"]
+    },
+    "photo_reporting": {
+      "label": "Photo annotation and inspection reporting",
+      "ratings_maximum": 5,
+      "phrases": ["inspection", "photo", "photos", "picture", "annotation", "report", "template", "punch list", "site visit", "contractor"]
+    }
+  },
+  "opportunity_score": {
+    "label": "Generated heuristic for experiment prioritization only",
+    "formula": "100 * (0.25*low_rating_share + 0.25*pain_review_share + 0.20*largest_recurring_pain_theme_share + 0.10*pricing_complaint_share + 0.20*bounded_demand_signal)",
+    "definitions": {
+      "low_rating_share": "Unique sampled reviews rated 1-2 divided by sampled reviews with a rating.",
+      "pain_review_share": "Unique sampled reviews rated 1-3 matching at least one pain theme divided by rated sampled reviews.",
+      "largest_recurring_pain_theme_share": "Largest unique review count among configured pain themes divided by rated sampled reviews.",
+      "pricing_complaint_share": "Unique sampled reviews rated 1-3 matching pricing_subscription divided by rated sampled reviews.",
+      "bounded_demand_signal": "min(1, log1p(sum of current App Store userRatingCount for selected competitors) / log1p(demand_rating_count_ceiling)). Metadata rating counts are demand context, not forecast demand for a new product."
+    },
+    "weights": {
+      "low_rating_share": 0.25,
+      "pain_review_share": 0.25,
+      "largest_recurring_pain_theme_share": 0.20,
+      "pricing_complaint_share": 0.10,
+      "bounded_demand_signal": 0.20
+    },
+    "demand_rating_count_ceiling": 1000000,
+    "minimum_rated_reviews_for_score": 10,
+    "limitations": [
+      "Apple RSS supplies only a recent, paginated sample and is not a random or complete review population.",
+      "Scores compare observable review and metadata signals for prioritization; they do not estimate purchases, revenue, market size, or causal demand.",
+      "Theme labels and scores are generated by transparent string-matching rules and can contain false positives or miss paraphrases."
+    ]
+  }
+}
