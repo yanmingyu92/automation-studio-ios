@@ -33,10 +33,14 @@ struct ProjectEditorView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Project") {
+                Section {
                     TextField("Report title", text: $title)
                     TextField("Site address", text: $siteAddress, axis: .vertical)
                     DatePicker("Inspection date", selection: $inspectionDate, displayedComponents: .date)
+                } header: {
+                    Text("Project")
+                } footer: {
+                    Text("A report title and site address are required.")
                 }
                 Section("Customer") {
                     TextField("Customer name", text: $customerName)
@@ -49,7 +53,7 @@ struct ProjectEditorView: View {
                         .textContentType(.name)
                     TextField("Company name", text: $companyName)
                         .textContentType(.organizationName)
-                    TextField("License, phone, email, or other report details", text: $companyDetails, axis: .vertical)
+                    TextField("License or contact details", text: $companyDetails, axis: .vertical)
                         .lineLimit(3...6)
                 }
                 Section("Report notes") {

@@ -105,7 +105,10 @@ struct FindingEditorView: View {
                         Label("Choose from library", systemImage: "photo.on.rectangle")
                     }
                 } label: {
+                    // Full-width hit area so a tap anywhere on the row opens the menu.
                     Label("Add photos", systemImage: "plus")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                 }
                 .accessibilityHint("Capture or import inspection evidence")
             } header: {

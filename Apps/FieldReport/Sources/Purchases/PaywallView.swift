@@ -39,7 +39,7 @@ struct PaywallView: View {
                         ContentUnavailableView(
                             "Products unavailable",
                             systemImage: "storefront",
-                            description: Text("FieldReport Pro products are not currently available from the App Store. Purchases cannot be made until the configured App Store Connect products are available.")
+                            description: Text("FieldReport Pro purchases are not available from the App Store right now. Nothing has been charged. Please try again later.")
                         )
                         Button("Check again") {
                             Task { await store.loadProducts() }

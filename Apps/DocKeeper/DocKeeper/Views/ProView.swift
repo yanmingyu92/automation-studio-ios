@@ -63,7 +63,7 @@ struct ProView: View {
                             .accessibilityHint("Purchases this product through the App Store")
                         }
                         if !store.isLoading && store.products.isEmpty {
-                            Text("Pro products are not available yet. They must be configured in App Store Connect before purchases can be offered. No payment has been taken.")
+                            Text("Pro purchases are not available from the App Store right now. No payment has been taken. Every free feature keeps working; please try again later.")
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }

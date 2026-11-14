@@ -113,7 +113,7 @@ struct BoardView: View {
                     CrossGlyph()
                         .stroke(Palette.ink.opacity(0.6), style: StrokeStyle(lineWidth: max(1.5, step * 0.045), lineCap: .round))
                 case .blank:
-                    if dimBlocked && session.blocked.contains(cell) {
+                    if dimBlocked && !session.isComplete && session.blocked.contains(cell) {
                         Circle()
                             .fill(Palette.ink.opacity(0.3))
                             .frame(width: step * 0.12, height: step * 0.12)

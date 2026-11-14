@@ -40,7 +40,7 @@ struct PaywallView: View {
                         VStack(alignment: .leading, spacing: 10) {
                             Label("Purchases are not available yet", systemImage: "exclamationmark.icloud")
                                 .font(.headline)
-                            Text("BarbellLedger could not find its live App Store Connect products. No simulated purchase will be offered. You can keep using every free feature and retry later.")
+                            Text("Pro purchases are not available from the App Store right now. Nothing has been charged. You can keep using every free feature and try again later.")
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                             Button("Retry Loading Products") { Task { await store.loadProducts() } }
