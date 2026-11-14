@@ -37,12 +37,14 @@ for app in "${apps[@]}"; do
             -destination "generic/platform=iOS"
             -archivePath "$DESTINATION/Archives/$app.xcarchive"
             -allowProvisioningUpdates
+            -allowProvisioningDeviceRegistration
         )
         if [[ $# -eq 2 ]]; then
             args+=("DEVELOPMENT_TEAM=$2")
         fi
         xcodebuild "${args[@]}" clean archive
         export_args=(
+            -exportArchive
             -archivePath "$DESTINATION/Archives/$app.xcarchive"
             -exportPath "$DESTINATION/Exports/$app"
             -exportOptionsPlist "$ROOT/Release/ExportOptions.plist"
