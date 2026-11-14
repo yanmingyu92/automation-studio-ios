@@ -189,6 +189,7 @@ struct FindingEditorView: View {
             Section {
                 TextField("Transcribed speech will appear here. You can also type or edit it.", text: $finding.transcript, axis: .vertical)
                     .lineLimit(5...16)
+                    .accessibilityLabel("Voice transcript")
                 if !finding.transcript.isEmpty {
                     Button("Insert transcript into observations") {
                         let text = finding.transcript.trimmingCharacters(in: .whitespacesAndNewlines)

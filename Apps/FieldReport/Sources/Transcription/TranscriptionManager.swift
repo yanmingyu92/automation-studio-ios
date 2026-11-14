@@ -176,6 +176,18 @@ final class TranscriptionManager: ObservableObject {
         }
     }
 
+    /// Whisper emits upper-case bracketed annotations such as "[BLANK_AUDIO]" or "[MUSIC]" for audio without
+    /// intelligible speech. They are not something the inspector said, so they are dropped; a recording that
+    /// yields nothing else is reported as containing no speech.
+    nonisolated static func removingNonSpeechAnnotations(from text: String) -> String {
+        text.replacingOccurrences(of: #"\[[A-Z][A-Z _]*\]"#, with: "", options: .regularExpression)
+            .split(separator: "\n", omittingEmptySubsequences: false)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+            .joined(separator: "\n")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     func transcribe(audioFileName: String?, findingID: UUID) async throws -> String {
         guard !isTranscribing else { throw TranscriptionError.alreadyInProgress }
         guard let whisperKit, setupState == .ready else { throw TranscriptionError.modelNotReady }
@@ -223,7 +235,7 @@ final class TranscriptionManager: ObservableObject {
             )
             guard !transcriptionCancellation.isCancelled else { throw CancellationError() }
             try Task.checkCancellation()
-            return results.map(\.text).joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+            return Self.removingNonSpeechAnnotations(from: results.map(\.text).joined(separator: "\n"))
         } catch {
             if transcriptionCancellation.isCancelled || error is CancellationError {
                 throw CancellationError()
