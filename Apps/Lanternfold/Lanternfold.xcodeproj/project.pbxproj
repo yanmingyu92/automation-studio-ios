@@ -1,0 +1,323 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0315BBF7166ADA9800F3462C /* PuzzleSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C000EBBAC38CC299E2CBE74E /* PuzzleSolver.swift */; };
+		1D1722633E94C286F2A76FCF /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C380E202F3B7C9A8A386CB2 /* PaywallView.swift */; };
+		40AA3AA8343AD7277C734743 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC97ED7BF7E650B44F288AC1 /* Theme.swift */; };
+		41117DFDC990A5E3A9AFC386 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7354677475D4BC4226511830 /* StoreManager.swift */; };
+		58CB7FF534ACCAB322E51673 /* PuzzleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC55A049DF0A8D89B0D76FD /* PuzzleGenerator.swift */; };
+		6E11174482579474F2845F4E /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF311FD14B1B0B61C18025 /* BoardView.swift */; };
+		75B862DBB141002133E6F0E0 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F871F9162A2EEAE6E57288 /* StatsView.swift */; };
+		77E832AB3CECC797DCC8F4D7 /* PuzzleRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E108477F5906F269F3946B01 /* PuzzleRecord.swift */; };
+		88BA1933D66D39C0E368AF8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49C5777786FA0F730037C60E /* Assets.xcassets */; };
+		8B37DF84B840B613B402DA71 /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72ACCE751F65DE80FD79ED8 /* GameSession.swift */; };
+		8B9493F5D92E6A94B2F49FB1 /* PuzzleCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9D5B0A4E4AC34157FC78DB /* PuzzleCatalog.swift */; };
+		8EC36C75E6BC83D15DAFAE24 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4597343962EFBF681760512E /* GameView.swift */; };
+		A1F9601D5C4188595C0E7DCB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5724FEC0A6420DF377521D4 /* SettingsView.swift */; };
+		C0A06E6E6EFF325C412D522D /* SeededRandom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735BE7C592834D5EC76C953C /* SeededRandom.swift */; };
+		C74198E90B4F89C2F1AD15A0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 08F45A616690FF38C4C12203 /* PrivacyInfo.xcprivacy */; };
+		CFF2F48F80DD7AD15E99AD6C /* RulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7BD0DFF3F210C531F61082A /* RulesView.swift */; };
+		DF11EBAC2B8A435019B2367A /* ProgressExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B114AEF2B71CA7AE291142 /* ProgressExport.swift */; };
+		E632BDAD239F2E9C8233793E /* Puzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23047C3F3059507D4DAD1E7C /* Puzzle.swift */; };
+		E7D66A891938068F4F7B4B1D /* LanternfoldApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432EB70627270ED4FFD05AC9 /* LanternfoldApp.swift */; };
+		E9422D982FBED24FF70800F7 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261F21971476FCB75E37F7DF /* JourneyView.swift */; };
+		F0E61BA5070572729B657355 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2909683F8495CE1D07DFC0A3 /* HomeView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		08F45A616690FF38C4C12203 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		0C380E202F3B7C9A8A386CB2 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		23047C3F3059507D4DAD1E7C /* Puzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzle.swift; sourceTree = "<group>"; };
+		261F21971476FCB75E37F7DF /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
+		289E77AC1F904CE32F8AE689 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2909683F8495CE1D07DFC0A3 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		432EB70627270ED4FFD05AC9 /* LanternfoldApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternfoldApp.swift; sourceTree = "<group>"; };
+		4597343962EFBF681760512E /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		49C5777786FA0F730037C60E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		53F871F9162A2EEAE6E57288 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		7354677475D4BC4226511830 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		735BE7C592834D5EC76C953C /* SeededRandom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeededRandom.swift; sourceTree = "<group>"; };
+		A5724FEC0A6420DF377521D4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		ADF410618B2415FFA590EB29 /* Lanternfold.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Lanternfold.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4B114AEF2B71CA7AE291142 /* ProgressExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressExport.swift; sourceTree = "<group>"; };
+		B7BD0DFF3F210C531F61082A /* RulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesView.swift; sourceTree = "<group>"; };
+		BBC55A049DF0A8D89B0D76FD /* PuzzleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleGenerator.swift; sourceTree = "<group>"; };
+		C000EBBAC38CC299E2CBE74E /* PuzzleSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleSolver.swift; sourceTree = "<group>"; };
+		CC97ED7BF7E650B44F288AC1 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		DB9D5B0A4E4AC34157FC78DB /* PuzzleCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleCatalog.swift; sourceTree = "<group>"; };
+		E108477F5906F269F3946B01 /* PuzzleRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleRecord.swift; sourceTree = "<group>"; };
+		E72ACCE751F65DE80FD79ED8 /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSession.swift; sourceTree = "<group>"; };
+		F5EF311FD14B1B0B61C18025 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		4239E8F5582A35B9AA0EF7B5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B4B114AEF2B71CA7AE291142 /* ProgressExport.swift */,
+				7354677475D4BC4226511830 /* StoreManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4B57931A7C3158B17727D17E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ADF410618B2415FFA590EB29 /* Lanternfold.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4C1229637C6BED8616EF3916 = {
+			isa = PBXGroup;
+			children = (
+				F15EC13261665C5EF2678858 /* Lanternfold */,
+				4B57931A7C3158B17727D17E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4CF9D5B0B37B0377A25664C7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F5EF311FD14B1B0B61C18025 /* BoardView.swift */,
+				4597343962EFBF681760512E /* GameView.swift */,
+				2909683F8495CE1D07DFC0A3 /* HomeView.swift */,
+				261F21971476FCB75E37F7DF /* JourneyView.swift */,
+				0C380E202F3B7C9A8A386CB2 /* PaywallView.swift */,
+				B7BD0DFF3F210C531F61082A /* RulesView.swift */,
+				A5724FEC0A6420DF377521D4 /* SettingsView.swift */,
+				53F871F9162A2EEAE6E57288 /* StatsView.swift */,
+				CC97ED7BF7E650B44F288AC1 /* Theme.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		88F24AD82D9C30188C00732E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E72ACCE751F65DE80FD79ED8 /* GameSession.swift */,
+				E108477F5906F269F3946B01 /* PuzzleRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A589E452EFA189276FCC9D9A /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				23047C3F3059507D4DAD1E7C /* Puzzle.swift */,
+				DB9D5B0A4E4AC34157FC78DB /* PuzzleCatalog.swift */,
+				BBC55A049DF0A8D89B0D76FD /* PuzzleGenerator.swift */,
+				C000EBBAC38CC299E2CBE74E /* PuzzleSolver.swift */,
+				735BE7C592834D5EC76C953C /* SeededRandom.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		D71C927FB0FBB0E5E0DE184F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				49C5777786FA0F730037C60E /* Assets.xcassets */,
+				08F45A616690FF38C4C12203 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F15EC13261665C5EF2678858 /* Lanternfold */ = {
+			isa = PBXGroup;
+			children = (
+				289E77AC1F904CE32F8AE689 /* Info.plist */,
+				432EB70627270ED4FFD05AC9 /* LanternfoldApp.swift */,
+				A589E452EFA189276FCC9D9A /* Engine */,
+				88F24AD82D9C30188C00732E /* Models */,
+				D71C927FB0FBB0E5E0DE184F /* Resources */,
+				4239E8F5582A35B9AA0EF7B5 /* Services */,
+				4CF9D5B0B37B0377A25664C7 /* Views */,
+			);
+			path = Lanternfold;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B9B971055588848890AA0469 /* Lanternfold */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EAC6231705A8BDC85C08A892 /* Build configuration list for PBXNativeTarget "Lanternfold" */;
+			buildPhases = (
+				F6B4F8DAEBC7C1537B5A8245 /* Sources */,
+				1B3522820A9CACB5EF5AC88F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Lanternfold;
+			packageProductDependencies = (
+			);
+			productName = Lanternfold;
+			productReference = ADF410618B2415FFA590EB29 /* Lanternfold.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6AD845943EE366C01E6F85D7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B9B971055588848890AA0469 = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 10D69372F22D45E61DF6EBF1 /* Build configuration list for PBXProject "Lanternfold" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 4C1229637C6BED8616EF3916;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4B57931A7C3158B17727D17E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B9B971055588848890AA0469 /* Lanternfold */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1B3522820A9CACB5EF5AC88F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88BA1933D66D39C0E368AF8A /* Assets.xcassets in Resources */,
+				C74198E90B4F89C2F1AD15A0 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F6B4F8DAEBC7C1537B5A8245 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E11174482579474F2845F4E /* BoardView.swift in Sources */,
+				8B37DF84B840B613B402DA71 /* GameSession.swift in Sources */,
+				8EC36C75E6BC83D15DAFAE24 /* GameView.swift in Sources */,
+				F0E61BA5070572729B657355 /* HomeView.swift in Sources */,
+				E9422D982FBED24FF70800F7 /* JourneyView.swift in Sources */,
+				E7D66A891938068F4F7B4B1D /* LanternfoldApp.swift in Sources */,
+				1D1722633E94C286F2A76FCF /* PaywallView.swift in Sources */,
+				DF11EBAC2B8A435019B2367A /* ProgressExport.swift in Sources */,
+				E632BDAD239F2E9C8233793E /* Puzzle.swift in Sources */,
+				8B9493F5D92E6A94B2F49FB1 /* PuzzleCatalog.swift in Sources */,
+				58CB7FF534ACCAB322E51673 /* PuzzleGenerator.swift in Sources */,
+				77E832AB3CECC797DCC8F4D7 /* PuzzleRecord.swift in Sources */,
+				0315BBF7166ADA9800F3462C /* PuzzleSolver.swift in Sources */,
+				CFF2F48F80DD7AD15E99AD6C /* RulesView.swift in Sources */,
+				C0A06E6E6EFF325C412D522D /* SeededRandom.swift in Sources */,
+				A1F9601D5C4188595C0E7DCB /* SettingsView.swift in Sources */,
+				75B862DBB141002133E6F0E0 /* StatsView.swift in Sources */,
+				41117DFDC990A5E3A9AFC386 /* StoreManager.swift in Sources */,
+				40AA3AA8343AD7277C734743 /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3F5C2CCE656EE5D479169324 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		526330F8D9A27676A9DAC3C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		6CE6B302B77D3CFA6E318AE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				INFOPLIST_FILE = Lanternfold/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.automationstudio.lanternfold;
+				PRODUCT_NAME = Lanternfold;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE70BBBFEE234038480B672E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				INFOPLIST_FILE = Lanternfold/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.automationstudio.lanternfold;
+				PRODUCT_NAME = Lanternfold;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		10D69372F22D45E61DF6EBF1 /* Build configuration list for PBXProject "Lanternfold" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				526330F8D9A27676A9DAC3C7 /* Debug */,
+				3F5C2CCE656EE5D479169324 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EAC6231705A8BDC85C08A892 /* Build configuration list for PBXNativeTarget "Lanternfold" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6CE6B302B77D3CFA6E318AE6 /* Debug */,
+				CE70BBBFEE234038480B672E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6AD845943EE366C01E6F85D7 /* Project object */;
+}

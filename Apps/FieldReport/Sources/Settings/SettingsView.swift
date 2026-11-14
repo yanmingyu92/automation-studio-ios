@@ -17,7 +17,7 @@ struct SettingsView: View {
                         .textContentType(.name)
                     TextField("Company name", text: $companyName)
                         .textContentType(.organizationName)
-                    TextField("License, phone, email, or other details", text: $companyDetails, axis: .vertical)
+                    TextField("License or contact details", text: $companyDetails, axis: .vertical)
                         .lineLimit(3...6)
                 } header: {
                     Text("Default report identity")

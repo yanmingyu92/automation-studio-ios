@@ -13,14 +13,32 @@ struct SettingsView: View {
     @State private var confirmDeleteHistory = false
     @State private var errorMessage: String?
 
+    private var proRowTitle: some View {
+        Label(store.isPro ? "Pro is active" : "Unlock Pro", systemImage: store.isPro ? "checkmark.seal.fill" : "arrow.up.forward.circle.fill")
+            .fixedSize(horizontal: true, vertical: false)
+    }
+
+    private var proRowDetail: some View {
+        Text(store.isPro ? "Manage" : "View options")
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: true, vertical: false)
+    }
+
     var body: some View {
         List {
             Section("BarbellLedger Pro") {
                 Button { showingPaywall = true } label: {
-                    HStack {
-                        Label(store.isPro ? "Pro is active" : "Unlock Pro", systemImage: store.isPro ? "checkmark.seal.fill" : "arrow.up.forward.circle.fill")
-                        Spacer()
-                        Text(store.isPro ? "Manage" : "View options").foregroundStyle(.secondary)
+                    // Stacks vertically when large text would otherwise break words mid-syllable.
+                    ViewThatFits(in: .horizontal) {
+                        HStack {
+                            proRowTitle
+                            Spacer()
+                            proRowDetail
+                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            proRowTitle
+                            proRowDetail
+                        }
                     }
                 }
             }

@@ -49,7 +49,7 @@ struct DataController {
     }
 
     static func createWorkout(from routine: Routine?, context: ModelContext) throws -> Workout {
-        let workout = Workout(name: routine?.name ?? "Workout", routine: routine)
+        let workout = Workout(name: routine?.name ?? "", routine: routine)
         context.insert(workout)
         if let routine {
             for entry in routine.orderedEntries {

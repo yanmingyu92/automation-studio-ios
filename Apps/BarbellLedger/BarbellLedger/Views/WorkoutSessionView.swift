@@ -1,6 +1,14 @@
 import SwiftData
 import SwiftUI
 
+/// One sheet presentation of the set editor. Carrying `completing` in the item itself keeps the sheet
+/// content from reading a stale flag captured before the state update.
+private struct SetEditRequest: Identifiable {
+    let workoutSet: WorkoutSet
+    let completing: Bool
+    var id: UUID { workoutSet.id }
+}
+
 struct WorkoutSessionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -11,8 +19,7 @@ struct WorkoutSessionView: View {
     @Query(sort: \Workout.startedAt, order: .reverse) private var workouts: [Workout]
     @Bindable var workout: Workout
 
-    @State private var editingSet: WorkoutSet?
-    @State private var completingSetID: UUID?
+    @State private var editRequest: SetEditRequest?
     @State private var showingExercisePicker = false
     @State private var showingRestTimer = false
     @State private var showingPaywall = false
@@ -20,7 +27,7 @@ struct WorkoutSessionView: View {
     @State private var confirmDiscard = false
     @State private var recordMessage: String?
     @State private var errorMessage: String?
-    @State private var editMode: EditMode = .inactive
+    @State private var exercisePendingRemoval: WorkoutExercise?
 
     var body: some View {
         NavigationStack {
@@ -47,17 +54,19 @@ struct WorkoutSessionView: View {
                         workouts: workouts,
                         previous: ProgressionEngine.previousExercise(before: workout, matching: item, in: workouts),
                         isPro: store.isPro,
-                        onEditSet: { editingSet = $0 },
+                        onEditSet: { editRequest = SetEditRequest(workoutSet: $0, completing: false) },
                         onToggleSet: { toggle($0, in: item) },
                         onAddSet: { addSet(to: item) },
                         onDeleteSet: { delete($0, from: item) },
                         onMoveSet: { move($0, direction: $1, in: item) },
                         onApplySuggestion: { apply($0, to: item) },
-                        onUnlock: { showingPaywall = true }
+                        onUnlock: { showingPaywall = true },
+                        canMoveEarlier: item.id != workout.orderedExercises.first?.id,
+                        canMoveLater: item.id != workout.orderedExercises.last?.id,
+                        onMoveExercise: { moveExercise(item, direction: $0) },
+                        onRemoveExercise: { exercisePendingRemoval = item }
                     )
                 }
-                .onMove(perform: moveExercises)
-                .onDelete(perform: deleteExercises)
 
                 Section {
                     Button { showingExercisePicker = true } label: {
@@ -66,14 +75,18 @@ struct WorkoutSessionView: View {
                 }
 
                 Section {
-                    Button("Finish Workout") { confirmFinish = true }
-                        .buttonStyle(.borderedProminent)
-                        .frame(maxWidth: .infinity)
+                    Button { confirmFinish = true } label: {
+                        Text("Finish Workout").frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
                     Button("Discard Workout", role: .destructive) { confirmDiscard = true }
                         .frame(maxWidth: .infinity)
                 }
                 .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
             }
+            .scrollDismissesKeyboard(.immediately)
             .navigationTitle(workout.startedAt.mediumDay)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -82,11 +95,11 @@ struct WorkoutSessionView: View {
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button("Rest timer", systemImage: "timer") { showingRestTimer = true }
-                    EditButton()
                 }
             }
-            .sheet(item: $editingSet, onDismiss: { completingSetID = nil }) { set in
-                let completing = completingSetID == set.id
+            .sheet(item: $editRequest) { request in
+                let set = request.workoutSet
+                let completing = request.completing
                 SetEditorView(set: set, markCompleted: completing) { edited in
                     if edited.isCompleted {
                         updateRecords(for: edited)
@@ -116,8 +129,17 @@ struct WorkoutSessionView: View {
             .alert("Workout Error", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
                 Button("OK") { errorMessage = nil }
             } message: { Text(errorMessage ?? "") }
-            // Applied outside .toolbar so the EditButton and the List share the same edit mode.
-            .environment(\.editMode, $editMode)
+            .confirmationDialog(
+                "Remove \(exercisePendingRemoval?.exerciseName ?? "exercise")?",
+                isPresented: Binding(get: { exercisePendingRemoval != nil }, set: { if !$0 { exercisePendingRemoval = nil } }),
+                titleVisibility: .visible
+            ) {
+                Button("Remove Exercise", role: .destructive) {
+                    if let item = exercisePendingRemoval { removeExercise(item) }
+                    exercisePendingRemoval = nil
+                }
+                Button("Cancel", role: .cancel) { exercisePendingRemoval = nil }
+            } message: { Text("Its sets in this workout will be permanently deleted.") }
         }
     }
 
@@ -125,8 +147,7 @@ struct WorkoutSessionView: View {
         // An empty set cannot be completed directly: it would be saved to history as "0 × 0"
         // and let the workout finish with no real data. Ask for values first.
         if !set.isCompleted, set.weightKilograms <= 0, set.reps <= 0, set.distanceMeters <= 0, set.durationSeconds <= 0 {
-            completingSetID = set.id
-            editingSet = set
+            editRequest = SetEditRequest(workoutSet: set, completing: true)
             return
         }
         set.isCompleted.toggle()
@@ -189,20 +210,19 @@ struct WorkoutSessionView: View {
         save()
     }
 
-    private func moveExercises(from source: IndexSet, to destination: Int) {
+    private func moveExercise(_ item: WorkoutExercise, direction: Int) {
         var items = workout.orderedExercises
-        items.move(fromOffsets: source, toOffset: destination)
+        guard let index = items.firstIndex(where: { $0.id == item.id }) else { return }
+        let target = index + direction
+        guard items.indices.contains(target) else { return }
+        items.swapAt(index, target)
         DataController.reindex(items)
         save()
     }
 
-    private func deleteExercises(at offsets: IndexSet) {
-        let items = workout.orderedExercises
-        for index in offsets {
-            let item = items[index]
-            workout.exercises?.removeAll { $0.id == item.id }
-            modelContext.delete(item)
-        }
+    private func removeExercise(_ item: WorkoutExercise) {
+        workout.exercises?.removeAll { $0.id == item.id }
+        modelContext.delete(item)
         DataController.reindex(workout.orderedExercises)
         save()
     }
@@ -270,6 +290,10 @@ struct WorkoutExerciseCard: View {
     let onMoveSet: (WorkoutSet, Int) -> Void
     let onApplySuggestion: (ProgressionSuggestion) -> Void
     let onUnlock: () -> Void
+    let canMoveEarlier: Bool
+    let canMoveLater: Bool
+    let onMoveExercise: (Int) -> Void
+    let onRemoveExercise: () -> Void
 
     private var suggestion: ProgressionSuggestion? {
         ProgressionEngine.suggestion(for: item, in: workout, workouts: workouts)
@@ -372,6 +396,18 @@ struct WorkoutExerciseCard: View {
                 Text("\(item.orderedSets.filter(\.isCompleted).count)/\(item.orderedSets.count)")
                     .font(.caption)
                     .accessibilityLabel("\(item.orderedSets.filter(\.isCompleted).count) of \(item.orderedSets.count.counted("set")) completed")
+                Menu {
+                    Button("Move Earlier", systemImage: "arrow.up") { onMoveExercise(-1) }
+                        .disabled(!canMoveEarlier)
+                    Button("Move Later", systemImage: "arrow.down") { onMoveExercise(1) }
+                        .disabled(!canMoveLater)
+                    Button("Remove Exercise", systemImage: "trash", role: .destructive, action: onRemoveExercise)
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .font(.body)
+                        .frame(minWidth: 44, minHeight: 32, alignment: .trailing)
+                }
+                .accessibilityLabel("Options for \(item.exerciseName)")
             }
         }
     }

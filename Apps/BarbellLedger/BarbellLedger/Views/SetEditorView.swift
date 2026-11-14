@@ -23,7 +23,7 @@ struct SetEditorView: View {
         self.set = set
         self.onSave = onSave
         let storedUnit = WeightUnit(rawValue: UserDefaults.standard.string(forKey: "defaultWeightUnit") ?? "kg") ?? .kilograms
-        _weightText = State(initialValue: storedUnit.fromKilograms(set.weightKilograms).cleanString)
+        _weightText = State(initialValue: set.weightKilograms == 0 ? "" : storedUnit.fromKilograms(set.weightKilograms).cleanString)
         _repsText = State(initialValue: set.reps == 0 ? "" : String(set.reps))
         _distanceText = State(initialValue: set.distanceMeters == 0 ? "" : set.distanceMeters.cleanString)
         _durationText = State(initialValue: set.durationSeconds == 0 ? "" : set.durationSeconds.clockString)

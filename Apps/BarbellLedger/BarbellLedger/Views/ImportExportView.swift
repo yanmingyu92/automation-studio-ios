@@ -19,6 +19,7 @@ struct ImportExportView: View {
     @State private var isProcessing = false
 
     var body: some View {
+        ScrollViewReader { proxy in
         Form {
             Section("FitNotes migration") {
                 Label("Choose your FitNotes CSV export. BarbellLedger reads it only when you select it and saves valid rows locally.", systemImage: "doc.badge.arrow.up")
@@ -56,17 +57,20 @@ struct ImportExportView: View {
                     NavigationLink("Review Existing Occurrences") {
                         CSVCollisionList(collisions: pendingImport.report.collisions)
                     }
+                    // The non-duplicating choice is the prominent one; re-importing existing rows is secondary.
+                    if pendingImport.report.newSetCount > 0 {
+                        Button {
+                            performImport(pendingImport.text, defaultUnit: pendingImport.defaultUnit, collisionPolicy: .skip)
+                        } label: {
+                            Text("Import Only \(pendingImport.report.newSetCount.counted("New Occurrence"))").frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .accessibilityHint("Skips reviewed existing occurrences and imports only pending occurrences beyond the existing count")
+                    }
                     Button("Import Reviewed Rows as Additional Sets") {
                         performImport(pendingImport.text, defaultUnit: pendingImport.defaultUnit, collisionPolicy: .importAll)
                     }
-                    .buttonStyle(.borderedProminent)
                     .accessibilityHint("Re-imports every reviewed occurrence as additional sets in its local-day workout and adds all new occurrences. Exact-timestamp duplicates remain skipped.")
-                    if pendingImport.report.newSetCount > 0 {
-                        Button("Import Only \(pendingImport.report.newSetCount.counted("New Occurrence"))") {
-                            performImport(pendingImport.text, defaultUnit: pendingImport.defaultUnit, collisionPolicy: .skip)
-                        }
-                        .accessibilityHint("Skips reviewed existing occurrences and imports only pending occurrences beyond the existing count")
-                    }
                     Button("Cancel Import", role: .cancel) { self.pendingImport = nil }
                     if !pendingImport.report.errors.isEmpty {
                         NavigationLink("Review \(pendingImport.report.errors.count.counted("row error"))") {
@@ -104,6 +108,16 @@ struct ImportExportView: View {
                     }
                 }
             }
+            Color.clear.frame(height: 1).listRowBackground(Color.clear).id("importOutcome")
+                .accessibilityHidden(true)
+        }
+        // Bring the confirmation or result into view; it otherwise appears below the fold.
+        .onChange(of: pendingImport != nil) { _, showing in
+            if showing { withAnimation { proxy.scrollTo("importOutcome", anchor: .bottom) } }
+        }
+        .onChange(of: report != nil) { _, showing in
+            if showing { withAnimation { proxy.scrollTo("importOutcome", anchor: .bottom) } }
+        }
         }
         .navigationTitle("Import & Export")
         .fileImporter(isPresented: $showingImporter, allowedContentTypes: [.commaSeparatedText, .text], allowsMultipleSelection: false) { result in

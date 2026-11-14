@@ -173,6 +173,11 @@ final class Workout {
 
     var isActive: Bool { completedAt == nil }
 
+    /// Name for display; an active workout may still have a blank name until it is finished.
+    var displayName: String {
+        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Workout" : name
+    }
+
     var allSets: [WorkoutSet] {
         orderedExercises.flatMap(\.orderedSets)
     }

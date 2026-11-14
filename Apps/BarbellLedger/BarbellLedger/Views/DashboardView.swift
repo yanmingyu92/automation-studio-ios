@@ -30,7 +30,7 @@ struct DashboardView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Workout in progress")
                                     .font(.headline)
-                                Text("\(activeWorkout.name) · \(activeWorkout.completedSets.count.counted("set")) logged")
+                                Text("\(activeWorkout.displayName) · \(activeWorkout.completedSets.count.counted("set")) logged")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
@@ -46,8 +46,11 @@ struct DashboardView: View {
                     Button { startWorkout() } label: {
                         Label("Start an empty workout", systemImage: "plus.circle.fill")
                             .font(.headline)
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, 6)
                     }
+                    .listRowBackground(Color("AccentColor"))
                     .accessibilityHint("Creates a workout saved automatically on this device")
                 }
             }
@@ -91,7 +94,7 @@ struct DashboardView: View {
                     ForEach(completedWorkouts.prefix(12)) { workout in
                         NavigationLink(destination: WorkoutDetailView(workout: workout)) {
                             VStack(alignment: .leading, spacing: 5) {
-                                Text(workout.name).font(.headline)
+                                Text(workout.displayName).font(.headline)
                                 Text(workout.startedAt.dayAndTime)
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
@@ -182,7 +185,7 @@ struct WorkoutDetailView: View {
                 }
             }
         }
-        .navigationTitle(workout.name)
+        .navigationTitle(workout.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

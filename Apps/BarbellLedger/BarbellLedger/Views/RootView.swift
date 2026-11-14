@@ -23,7 +23,7 @@ struct RootView: View {
                 .tabItem { Label("More", systemImage: "ellipsis.circle") }
                 .tag(4)
         }
-        .tint(.accentColor)
+        .tint(Color("AccentColor"))
         .task { DataController.seedExerciseCatalogIfNeeded(context: modelContext) }
     }
 }
