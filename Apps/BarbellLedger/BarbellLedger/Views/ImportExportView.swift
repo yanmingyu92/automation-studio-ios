@@ -45,7 +45,7 @@ struct ImportExportView: View {
 
             if let pendingImport {
                 Section("Import Confirmation Required") {
-                    Label("\(pendingImport.report.collisions.count) file occurrences are covered by existing date-only sets. They may be repeated export rows or a separate same-day session. Nothing has been imported from this file yet.", systemImage: "exclamationmark.triangle.fill")
+                    Label("\(pendingImport.report.collisions.count == 1 ? "1 file occurrence is" : "\(pendingImport.report.collisions.count) file occurrences are") covered by existing date-only sets. They may be repeated export rows or a separate same-day session. Nothing has been imported from this file yet.", systemImage: "exclamationmark.triangle.fill")
                         .font(.footnote)
                         .foregroundStyle(.orange)
                     LabeledContent("Valid rows in file", value: "\(pendingImport.report.pendingSetCount)")
@@ -62,14 +62,14 @@ struct ImportExportView: View {
                     .buttonStyle(.borderedProminent)
                     .accessibilityHint("Re-imports every reviewed occurrence as additional sets in its local-day workout and adds all new occurrences. Exact-timestamp duplicates remain skipped.")
                     if pendingImport.report.newSetCount > 0 {
-                        Button("Import Only \(pendingImport.report.newSetCount) New Occurrences") {
+                        Button("Import Only \(pendingImport.report.newSetCount.counted("New Occurrence"))") {
                             performImport(pendingImport.text, defaultUnit: pendingImport.defaultUnit, collisionPolicy: .skip)
                         }
                         .accessibilityHint("Skips reviewed existing occurrences and imports only pending occurrences beyond the existing count")
                     }
                     Button("Cancel Import", role: .cancel) { self.pendingImport = nil }
                     if !pendingImport.report.errors.isEmpty {
-                        NavigationLink("Review \(pendingImport.report.errors.count) row errors") {
+                        NavigationLink("Review \(pendingImport.report.errors.count.counted("row error"))") {
                             CSVErrorList(errors: pendingImport.report.errors)
                         }
                     }
@@ -100,7 +100,7 @@ struct ImportExportView: View {
                         ForEach(report.warnings, id: \.self) { Text($0).font(.footnote).foregroundStyle(.secondary) }
                     }
                     if !report.errors.isEmpty {
-                        NavigationLink("Review \(report.errors.count) row errors") { CSVErrorList(errors: report.errors) }
+                        NavigationLink("Review \(report.errors.count.counted("row error"))") { CSVErrorList(errors: report.errors) }
                     }
                 }
             }

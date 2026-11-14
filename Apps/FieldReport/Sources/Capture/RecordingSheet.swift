@@ -7,75 +7,78 @@ struct RecordingSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 28) {
-                VStack(spacing: 8) {
-                    Text(recorder.isRecording ? "Recording inspection note" : "Voice inspection note")
-                        .font(.title2.bold())
-                        .multilineTextAlignment(.center)
-                    Text(recorder.isRecording ? "Describe the location, condition, and recommended next step." : "Start when you are ready. Your audio stays on this device.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-                .padding(.horizontal)
-
-                Text(formattedDuration(recorder.duration))
-                    .font(.system(.largeTitle, design: .monospaced).weight(.semibold))
-                    .foregroundStyle(Color.fieldInk)
-                    .accessibilityLabel("Recording duration \(formattedDuration(recorder.duration))")
-
-                HStack(alignment: .center, spacing: 5) {
-                    ForEach(0..<25, id: \.self) { index in
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.fieldTeal)
-                            .frame(width: 5, height: barHeight(index))
-                            .animation(.easeOut(duration: 0.08), value: recorder.audioLevel)
+            ScrollView {
+                VStack(spacing: 28) {
+                    VStack(spacing: 8) {
+                        Text(recorder.isRecording ? "Recording inspection note" : "Voice inspection note")
+                            .font(.title2.bold())
+                            .multilineTextAlignment(.center)
+                        Text(recorder.isRecording ? "Describe the location, condition, and recommended next step." : "Start when you are ready. Your audio stays on this device.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                     }
-                }
-                .frame(height: 84)
-                .accessibilityHidden(true)
-
-                if recorder.isRecording {
-                    Button {
-                        do {
-                            let audio = try recorder.stop()
-                            onSaved(audio)
-                            dismiss()
-                        } catch {
-                            recorder.errorMessage = error.localizedDescription
-                        }
-                    } label: {
-                        Label("Stop & save", systemImage: "stop.circle.fill")
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .padding(.horizontal, 32)
-                    Button("Discard recording", role: .destructive) {
-                        recorder.cancel()
-                        dismiss()
-                    }
-                } else {
-                    Button {
-                        Task { await recorder.start() }
-                    } label: {
-                        Label("Start recording", systemImage: "record.circle")
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .padding(.horizontal, 32)
-                }
-
-                if recorder.permissionDenied {
-                    Link("Open microphone settings", destination: URL(string: UIApplication.openSettingsURLString)!)
-                        .font(.headline)
-                }
-
-                Label("Keep FieldReport open. Recording stops and saves if the app is interrupted or moves to the background. Maximum recording length is two hours.", systemImage: "info.circle")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
                     .padding(.horizontal)
-                Spacer()
+
+                    Text(formattedDuration(recorder.duration))
+                        .font(.system(.largeTitle, design: .monospaced).weight(.semibold))
+                        .foregroundStyle(Color.fieldInk)
+                        .accessibilityLabel("Recording duration \(formattedDuration(recorder.duration))")
+                        .accessibilityAddTraits(.updatesFrequently)
+
+                    HStack(alignment: .center, spacing: 5) {
+                        ForEach(0..<25, id: \.self) { index in
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Color.fieldTeal)
+                                .frame(width: 5, height: barHeight(index))
+                                .animation(.easeOut(duration: 0.08), value: recorder.audioLevel)
+                        }
+                    }
+                    .frame(height: 84)
+                    .accessibilityHidden(true)
+
+                    if recorder.isRecording {
+                        Button {
+                            do {
+                                let audio = try recorder.stop()
+                                onSaved(audio)
+                                dismiss()
+                            } catch {
+                                recorder.errorMessage = error.localizedDescription
+                            }
+                        } label: {
+                            Label("Stop & save", systemImage: "stop.circle.fill")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .padding(.horizontal, 32)
+                        Button("Discard recording", role: .destructive) {
+                            recorder.cancel()
+                            dismiss()
+                        }
+                    } else {
+                        Button {
+                            Task { await recorder.start() }
+                        } label: {
+                            Label("Start recording", systemImage: "record.circle")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .padding(.horizontal, 32)
+                    }
+
+                    if recorder.permissionDenied {
+                        Link("Open microphone settings", destination: URL(string: UIApplication.openSettingsURLString)!)
+                            .font(.headline)
+                    }
+
+                    Label("Keep FieldReport open. Recording stops and saves if the app is interrupted or moves to the background. Maximum recording length is two hours.", systemImage: "info.circle")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal)
+                }
+                .padding(.top, 32)
+                .padding(.bottom)
+                .frame(maxWidth: .infinity)
             }
-            .padding(.top, 32)
-            .padding(.bottom)
             .background(Color.fieldCanvas)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

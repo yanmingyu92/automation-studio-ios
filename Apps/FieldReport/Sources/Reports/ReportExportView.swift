@@ -27,16 +27,16 @@ struct ReportExportView: View {
                 } else if let document {
                     PDFPreview(document: document)
                 } else {
-                    ContentUnavailableView(
-                        "Report unavailable",
-                        systemImage: "doc.badge.exclamationmark",
-                        description: Text(errorMessage ?? "The PDF could not be created.")
-                    )
-                    Button("Try again") {
-                        Task { await generateReport() }
+                    ContentUnavailableView {
+                        Label("Report unavailable", systemImage: "doc.badge.exclamationmark")
+                    } description: {
+                        Text(errorMessage ?? "The PDF could not be created.")
+                    } actions: {
+                        Button("Try again") {
+                            Task { await generateReport() }
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
                     }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .padding()
                 }
             }
             .background(Color.fieldCanvas)

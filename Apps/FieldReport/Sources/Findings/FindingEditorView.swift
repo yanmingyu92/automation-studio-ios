@@ -1,3 +1,4 @@
+import AVFoundation
 import PhotosUI
 import SwiftData
 import SwiftUI
@@ -11,6 +12,9 @@ struct FindingEditorView: View {
 
     @State private var photoSelection: [PhotosPickerItem] = []
     @State private var isCameraPresented = false
+    @State private var isCameraAccessDenied = false
+    @State private var isPhotoPickerPresented = false
+    @State private var didDeleteFinding = false
     @State private var isRecordingPresented = false
     @State private var isModelPresented = false
     @State private var selectedPhoto: FindingPhoto?
@@ -91,14 +95,13 @@ struct FindingEditorView: View {
                 Menu {
                     Button {
                         photoSelection = []
-                        isCameraPresented = CameraPicker.isAvailable
-                        if !CameraPicker.isAvailable {
-                            errorMessage = "This device does not have an available camera. You can choose photos from your library instead."
-                        }
+                        requestCamera()
                     } label: {
                         Label("Take photo", systemImage: "camera")
                     }
-                    PhotosPicker(selection: $photoSelection, maxSelectionCount: 6, matching: .images) {
+                    Button {
+                        isPhotoPickerPresented = true
+                    } label: {
                         Label("Choose from library", systemImage: "photo.on.rectangle")
                     }
                 } label: {
@@ -138,6 +141,7 @@ struct FindingEditorView: View {
                 }
 
                 Button {
+                    player.stop()
                     if finding.audioFileName == nil {
                         isRecordingPresented = true
                     } else {
@@ -234,8 +238,11 @@ struct FindingEditorView: View {
             photoSelection = []
             Task { await importPhotos(items) }
         }
+        .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoSelection, maxSelectionCount: 6, matching: .images)
         .onDisappear {
             player.stop()
+            // Writing to a model after it was deleted and saved is a SwiftData fault.
+            guard !didDeleteFinding else { return }
             finding.updatedAt = .now
             finding.project?.updatedAt = .now
             try? modelContext.save()
@@ -292,6 +299,14 @@ struct FindingEditorView: View {
         } message: {
             Text("This permanently removes the finding, its photos, and its recording.")
         }
+        .alert("Camera access is off", isPresented: $isCameraAccessDenied) {
+            Button("Open Settings") {
+                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Allow camera access for FieldReport in Settings to take inspection photos. You can still choose photos from your library.")
+        }
         .alert("Update", isPresented: Binding(
             get: { infoMessage != nil },
             set: { if !$0 { infoMessage = nil } }
@@ -325,6 +340,28 @@ struct FindingEditorView: View {
         }
     }
 
+    private func requestCamera() {
+        guard CameraPicker.isAvailable else {
+            errorMessage = "This device does not have an available camera. You can choose photos from your library instead."
+            return
+        }
+        // The system camera shows only a black preview when access is denied, so check before presenting it.
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            isCameraPresented = true
+        case .notDetermined:
+            Task {
+                if await AVCaptureDevice.requestAccess(for: .video) {
+                    isCameraPresented = true
+                } else {
+                    isCameraAccessDenied = true
+                }
+            }
+        default:
+            isCameraAccessDenied = true
+        }
+    }
+
     private func addPhoto(data: Data) throws {
         let stored = try LocalFileStore.persistImage(data: data)
         let photo = FindingPhoto(fileName: stored.fileName, thumbnailFileName: stored.thumbnailFileName)
@@ -340,6 +377,9 @@ struct FindingEditorView: View {
     }
 
     private func saveRecording(_ audio: RecordedAudio) {
+        // The previous file is about to be deleted: release it from playback and any running transcription.
+        player.stop()
+        if transcription.activeFindingID == finding.id { transcription.cancelTranscription() }
         let oldFileName = finding.audioFileName
         let oldDuration = finding.audioDuration
         finding.audioFileName = audio.fileName
@@ -372,7 +412,8 @@ struct FindingEditorView: View {
         transcriptionTask = Task { [finding] in
             do {
                 let text = try await transcription.transcribe(audioFileName: finding.audioFileName, findingID: finding.id)
-                guard !Task.isCancelled else { return }
+                // The finding or its project may have been deleted while the transcription ran.
+                guard !Task.isCancelled, !didDeleteFinding, !finding.isDeleted, finding.modelContext != nil else { return }
                 if text.isEmpty {
                     infoMessage = "No speech was detected in this recording. Try a clearer recording or type the finding manually."
                 } else {
@@ -430,6 +471,7 @@ struct FindingEditorView: View {
         modelContext.delete(finding)
         do {
             try modelContext.save()
+            didDeleteFinding = true
             LocalFileStore.deleteAudio(fileName: audioFileName)
             for (fileName, thumbnailFileName) in media {
                 if let url = try? LocalFileStore.photoURL(fileName: fileName) {

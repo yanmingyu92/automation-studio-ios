@@ -96,12 +96,12 @@ struct RoutineDetailView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(entry.exerciseName).foregroundStyle(.primary)
-                                Text("\(entry.targetSets) sets × \(entry.targetReps) reps · rest \(entry.restSeconds.clockString)")
+                                Text("\(entry.targetSets.counted("set")) × \(entry.targetReps.counted("rep")) · rest \(entry.restSeconds.clockString)")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
                             Spacer()
-                            Image(systemName: "slider.horizontal.3").foregroundStyle(.secondary)
+                            Image(systemName: "slider.horizontal.3").foregroundStyle(.secondary).accessibilityHidden(true)
                         }
                     }
                 }
@@ -124,7 +124,6 @@ struct RoutineDetailView: View {
                 .disabled(routine.orderedEntries.isEmpty && activeWorkout == nil)
             }
         }
-        .environment(\.editMode, $editMode)
         .navigationTitle(routine.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -154,6 +153,8 @@ struct RoutineDetailView: View {
         .alert("Routine Error", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
             Button("OK") { errorMessage = nil }
         } message: { Text(errorMessage ?? "") }
+        // Applied outside .toolbar so the EditButton and the List share the same edit mode.
+        .environment(\.editMode, $editMode)
     }
 
     private func move(from source: IndexSet, to destination: Int) {
@@ -191,7 +192,10 @@ struct RoutineEntryEditor: View {
                 Section("RPE target") {
                     Toggle("Include RPE target", isOn: Binding(get: { entry.targetRPE != nil }, set: { entry.targetRPE = $0 ? 8 : nil }))
                     if entry.targetRPE != nil {
-                        Slider(value: Binding(get: { entry.targetRPE ?? 8 }, set: { entry.targetRPE = $0 }), in: 4...10, step: 0.5)
+                        Slider(value: Binding(get: { entry.targetRPE ?? 8 }, set: { entry.targetRPE = $0 }), in: 4...10, step: 0.5) {
+                            Text("RPE target")
+                        }
+                        .accessibilityValue("\((entry.targetRPE ?? 8).cleanString) out of 10")
                         Text("\((entry.targetRPE ?? 8).cleanString) RPE")
                     }
                 }

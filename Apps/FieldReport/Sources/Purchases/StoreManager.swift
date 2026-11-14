@@ -31,7 +31,8 @@ final class StoreManager: ObservableObject {
             await self?.listenForTransactions()
         }
         Task { [weak self] in
-            await self?.loadProducts()
+            // Launching offline must not raise an unprompted error; the paywall reports load failures.
+            await self?.loadProducts(reportErrors: false)
             await self?.refreshEntitlements()
         }
     }
@@ -40,13 +41,14 @@ final class StoreManager: ObservableObject {
         transactionUpdates?.cancel()
     }
 
-    func loadProducts() async {
+    func loadProducts(reportErrors: Bool = true) async {
         isLoading = true
         defer { isLoading = false }
         do {
             let loaded = try await Product.products(for: Self.productIDs)
             products = Self.productIDs.compactMap { id in loaded.first(where: { $0.id == id }) }
         } catch {
+            guard reportErrors else { return }
             errorMessage = "App Store products could not be loaded. \(error.localizedDescription)"
         }
     }
@@ -84,6 +86,8 @@ final class StoreManager: ObservableObject {
             try await AppStore.sync()
             await refreshEntitlements()
             infoMessage = isPro ? "Your Pro purchase was restored." : "No active FieldReport Pro purchase was found for this Apple Account."
+        } catch StoreKitError.userCancelled {
+            // The Apple Account sign-in prompt was dismissed; nothing failed.
         } catch {
             errorMessage = "Purchases could not be restored. \(error.localizedDescription)"
         }

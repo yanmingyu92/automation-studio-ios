@@ -43,6 +43,7 @@ struct DocumentsView: View {
     @State private var importTask: Task<Void, Never>?
     @State private var activeDraft: DocumentDraft?
     @State private var documentPendingDeletion: DocumentRecord?
+    @State private var didRemoveAbandonedDrafts = false
 
     private var filteredDocuments: [DocumentRecord] {
         let calendar = Calendar.current
@@ -202,6 +203,7 @@ struct DocumentsView: View {
         .onChange(of: importer.draft) { _, draft in
             presentImportedDraft(draft)
         }
+        .task { removeAbandonedDrafts() }
         .alert("Document Import", isPresented: errorPresented) {
             Button("OK") { importer.errorMessage = nil }
         } message: {
@@ -279,6 +281,7 @@ struct DocumentsView: View {
             .ignoresSafeArea()
         case .editor(let draft):
             DocumentEditorView(document: nil, draft: draft, onSaved: {
+                DocumentFileStore.unregisterDraftPDF(draft.localPDFPath)
                 activeDraft = nil
                 importer.draft = nil
             })
@@ -309,6 +312,7 @@ struct DocumentsView: View {
                     }
                     await importer.importPhoto(data: data)
                 } catch {
+                    if error is CancellationError || Task.isCancelled { return }
                     importer.errorMessage = error.localizedDescription
                 }
             }
@@ -365,16 +369,42 @@ struct DocumentsView: View {
 
     private func abandonUnsavedDraft() {
         guard let draft = activeDraft else { return }
+        // onDismiss also fires for the scanner and Pro sheets. If the editor for this draft
+        // is the sheet now being presented, the draft is still in use and must be kept.
+        if case .editor(let presented) = sheet, presented.id == draft.id { return }
         activeDraft = nil
         importer.draft = nil
         do {
             try DocumentFileStore.deletePDF(forRelativePath: draft.localPDFPath)
+            DocumentFileStore.unregisterDraftPDF(draft.localPDFPath)
         } catch {
             importer.errorMessage = "The canceled draft’s PDF could not be removed: \(error.localizedDescription)"
         }
     }
 
+    /// Removes PDFs of drafts that were never saved because the app was terminated while
+    /// the editor was open. Runs once per launch, before any new draft can exist.
+    private func removeAbandonedDrafts() {
+        guard !didRemoveAbandonedDrafts else { return }
+        didRemoveAbandonedDrafts = true
+        guard !importer.isProcessing, activeDraft == nil else { return }
+        for path in DocumentFileStore.registeredDraftPDFs {
+            let descriptor = FetchDescriptor<DocumentRecord>(
+                predicate: #Predicate { $0.localPDFPath == path }
+            )
+            // If the lookup fails, keep the file and try again on the next launch.
+            guard let references = try? modelContext.fetchCount(descriptor) else { continue }
+            if references > 0 {
+                DocumentFileStore.unregisterDraftPDF(path)
+            } else if (try? DocumentFileStore.deletePDF(forRelativePath: path)) != nil {
+                DocumentFileStore.unregisterDraftPDF(path)
+            }
+        }
+    }
+
     private func delete(_ document: DocumentRecord) {
+        // Read the identifier first: a deleted model must not be accessed after the save.
+        let documentID = document.id
         let pendingDeletion: DocumentFileStore.PendingPDFDeletion
         do {
             pendingDeletion = try DocumentFileStore.beginPDFDeletion(forRelativePath: document.localPDFPath)
@@ -397,7 +427,7 @@ struct DocumentsView: View {
             return
         }
 
-        notifications.cancelReminders(for: document)
+        notifications.cancelReminders(forDocumentID: documentID)
         do {
             try DocumentFileStore.finishPDFDeletion(pendingDeletion)
         } catch {

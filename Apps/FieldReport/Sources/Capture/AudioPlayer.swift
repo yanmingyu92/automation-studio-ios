@@ -10,6 +10,29 @@ final class AudioPlayer: NSObject, ObservableObject {
 
     private var player: AVAudioPlayer?
     private var timer: Timer?
+    private var interruptionObserver: NSObjectProtocol?
+
+    override init() {
+        super.init()
+        // The system pauses playback on calls, alarms, and backgrounding; keep the control state in step.
+        interruptionObserver = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance(),
+            queue: .main
+        ) { [weak self] notification in
+            guard let typeValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+                  AVAudioSession.InterruptionType(rawValue: typeValue) == .began else { return }
+            Task { @MainActor in
+                guard let self, self.isPlaying else { return }
+                self.pause()
+            }
+        }
+    }
+
+    isolated deinit {
+        if let interruptionObserver { NotificationCenter.default.removeObserver(interruptionObserver) }
+        timer?.invalidate()
+    }
 
     func toggle(url: URL) {
         if isPlaying {
@@ -23,7 +46,8 @@ final class AudioPlayer: NSObject, ObservableObject {
 
     func play(url: URL) {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.allowAirPlay, .allowBluetoothHFP])
+            // Bluetooth HFP and explicit AirPlay options are not valid for the playback category.
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
             try AVAudioSession.sharedInstance().setActive(true)
             let player = try AVAudioPlayer(contentsOf: url)
             player.delegate = self
@@ -51,6 +75,7 @@ final class AudioPlayer: NSObject, ObservableObject {
 
     func resume() {
         guard let player else { return }
+        try? AVAudioSession.sharedInstance().setActive(true)
         isPlaying = player.play()
         if isPlaying { startTimer() }
     }

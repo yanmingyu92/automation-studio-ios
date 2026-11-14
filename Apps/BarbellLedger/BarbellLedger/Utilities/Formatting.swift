@@ -10,6 +10,11 @@ extension Double {
 
 extension Int {
     var clockString: String { TimeInterval(self).clockString }
+
+    /// "1 set", "2 sets". Pass `plural` for irregular forms.
+    func counted(_ singular: String, _ plural: String? = nil) -> String {
+        "\(self) \(self == 1 ? singular : plural ?? singular + "s")"
+    }
 }
 
 extension TimeInterval {

@@ -121,6 +121,8 @@ struct FitNotesCSVService {
         let rows = try parse(text)
         guard let headerRow = rows.first, rows.count > 1 else { throw CSVImportError.emptyFile }
         let columns = columnMap(headerRow)
+        // Classic FitNotes exports name the column "Weight (kgs)" / "Weight (lbs)" with no Weight Unit column.
+        let headerWeightUnit = columns["weight"].flatMap { impliedWeightUnit(forHeader: headerRow[$0]) }
         let missing = ["date", "exercise"].filter { columns[$0] == nil }.map { $0.capitalized }
         guard missing.isEmpty else { throw CSVImportError.missingColumns(missing) }
 
@@ -167,7 +169,7 @@ struct FitNotesCSVService {
                 let weight = weightText.isEmpty ? 0 : NumberParsing.double(weightText)
                 guard let weight, weight.isFinite, weight >= 0, weight <= 10_000_000 else { throw rowError("Weight ‘\(weightText)’ is not a valid non-negative number below 10,000,000.") }
                 let unitText = value("weightunit", in: row, columns: columns)
-                let weightUnit = try parseWeightUnit(unitText, fallback: defaultUnit)
+                let weightUnit = try parseWeightUnit(unitText, fallback: headerWeightUnit ?? defaultUnit)
                 let weightKilograms = weightUnit.toKilograms(weight)
 
                 let repsText = value("reps", in: row, columns: columns)
@@ -296,12 +298,12 @@ struct FitNotesCSVService {
         report.duplicatesSkipped = timestampDuplicateCount
         if collisionPolicy == .skip {
             report.duplicatesSkipped += collisionsByRow.count
-            if collisionsByRow.count > 0 { report.warnings.append("\(collisionsByRow.count) reviewed existing occurrences were skipped; only occurrences beyond the existing count were imported.") }
+            if collisionsByRow.count > 0 { report.warnings.append("\(collisionsByRow.count == 1 ? "1 reviewed existing occurrence was" : "\(collisionsByRow.count) reviewed existing occurrences were") skipped; only occurrences beyond the existing count were imported.") }
         } else if collisionPolicy == .importAll {
             report.collisionsImported = collisionsByRow.count
-            if collisionsByRow.count > 0 { report.warnings.append("\(collisionsByRow.count) reviewed date-only occurrences were imported again as additional same-day sets.") }
+            if collisionsByRow.count > 0 { report.warnings.append("\(collisionsByRow.count == 1 ? "1 reviewed date-only occurrence was" : "\(collisionsByRow.count) reviewed date-only occurrences were") imported again as additional same-day sets.") }
         }
-        if timestampDuplicateCount > 0 { report.warnings.append("\(timestampDuplicateCount) exact-timestamp duplicate occurrences were skipped.") }
+        if timestampDuplicateCount > 0 { report.warnings.append("\(timestampDuplicateCount == 1 ? "1 exact-timestamp duplicate occurrence was" : "\(timestampDuplicateCount) exact-timestamp duplicate occurrences were") skipped.") }
         report.collisions = []
         let recordsWholeFile = collisionsByRow.isEmpty || collisionPolicy == .importAll
 
@@ -491,7 +493,7 @@ struct FitNotesCSVService {
             "date": ["date", "workoutdate", "day"],
             "exercise": ["exercise", "exercisename", "movement"],
             "category": ["category", "exercisecategory", "muscle", "musclegroup"],
-            "weight": ["weight", "load", "weightvalue"],
+            "weight": ["weight", "load", "weightvalue", "weightkg", "weightkgs", "weightkilograms", "weightlb", "weightlbs", "weightpounds"],
             "weightunit": ["weightunit", "weightunits", "unit", "units"],
             "reps": ["reps", "repetitions", "repetitioncount"],
             "distance": ["distance", "distancevalue"],
@@ -508,6 +510,14 @@ struct FitNotesCSVService {
             for (key, names) in aliases where names.contains(normalized) && result[key] == nil { result[key] = index }
         }
         return result
+    }
+
+    private static func impliedWeightUnit(forHeader header: String) -> WeightUnit? {
+        switch header.normalizedHeader {
+        case "weightkg", "weightkgs", "weightkilograms": .kilograms
+        case "weightlb", "weightlbs", "weightpounds": .pounds
+        default: nil
+        }
     }
 
     private static func value(_ key: String, in row: [String], columns: [String: Int]) -> String {

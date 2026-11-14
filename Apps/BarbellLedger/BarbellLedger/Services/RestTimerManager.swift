@@ -14,6 +14,9 @@ final class RestTimerManager: NSObject, UNUserNotificationCenterDelegate {
     var authorizationStatus: UNAuthorizationStatus = .notDetermined
     var message: String?
 
+    /// Incremented by every start/stop so a start suspended on a permission await cannot revive a cancelled timer.
+    private var generation = 0
+
     var isRunning: Bool { endDate?.timeIntervalSinceNow ?? 0 > 0 }
 
     override init() {
@@ -36,6 +39,8 @@ final class RestTimerManager: NSObject, UNUserNotificationCenterDelegate {
     func start(seconds: TimeInterval) async {
         guard seconds > 0 else { return }
         message = nil
+        generation += 1
+        let token = generation
         let center = UNUserNotificationCenter.current()
         await refreshPermission()
         if authorizationStatus == .notDetermined {
@@ -46,10 +51,12 @@ final class RestTimerManager: NSObject, UNUserNotificationCenterDelegate {
             }
             await refreshPermission()
         }
+        guard token == generation else { return }
 
         duration = seconds
-        endDate = Date().addingTimeInterval(seconds)
-        UserDefaults.standard.set(endDate, forKey: endDateKey)
+        let end = Date().addingTimeInterval(seconds)
+        endDate = end
+        UserDefaults.standard.set(end, forKey: endDateKey)
         UserDefaults.standard.set(seconds, forKey: durationKey)
         center.removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
         center.removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
@@ -68,12 +75,19 @@ final class RestTimerManager: NSObject, UNUserNotificationCenterDelegate {
         let request = UNNotificationRequest(identifier: notificationIdentifier, content: content, trigger: trigger)
         do {
             try await center.add(request)
+            // stop() ran while scheduling: do not leave this alert behind. A newer start() reuses the
+            // identifier and replaces this request on its own.
+            if endDate == nil {
+                center.removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
+            }
         } catch {
+            guard token == generation else { return }
             message = "The in-app timer is running, but the background alert could not be scheduled: \(error.localizedDescription)"
         }
     }
 
     func stop() {
+        generation += 1
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
         center.removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])

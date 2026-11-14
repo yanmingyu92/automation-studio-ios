@@ -70,27 +70,41 @@ struct PRLabel: View {
 
 struct RestTimerBanner: View {
     @Environment(RestTimerManager.self) private var timer
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let onEdit: () -> Void
 
     var body: some View {
         Group {
             if timer.endDate != nil {
                 TimelineView(.periodic(from: .now, by: 1)) { context in
-                    HStack(spacing: 14) {
-                        Image(systemName: timer.isRunning ? "timer" : "checkmark.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(.mint)
-                        VStack(alignment: .leading) {
-                            Text(timer.isRunning ? "Resting" : "Rest complete")
-                                .font(.headline)
-                            Text(timer.remaining(at: context.date).clockString)
-                                .font(.title3.monospacedDigit().weight(.bold))
-                                .contentTransition(.numericText())
+                    let remaining = timer.remaining(at: context.date)
+                    let stacked = dynamicTypeSize.isAccessibilitySize
+                    let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10)) : AnyLayout(HStackLayout(spacing: 14))
+                    layout {
+                        HStack(spacing: 14) {
+                            Image(systemName: remaining > 0 ? "timer" : "checkmark.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(.mint)
+                                .accessibilityHidden(true)
+                            VStack(alignment: .leading) {
+                                Text(remaining > 0 ? "Resting" : "Rest complete")
+                                    .font(.headline)
+                                Text(remaining.clockString)
+                                    .font(.title3.monospacedDigit().weight(.bold))
+                                    .contentTransition(.numericText())
+                            }
                         }
-                        Spacer()
-                        Button("Change", action: onEdit)
-                        Button("Stop", role: .destructive) { timer.stop() }
+                        .accessibilityElement(children: .combine)
+                        if !stacked { Spacer(minLength: 0) }
+                        // Borderless so each button has its own tap target; default-style buttons
+                        // sharing one List row all fire when the row is tapped.
+                        HStack(spacing: 14) {
+                            Button("Change", action: onEdit)
+                            Button("Stop", role: .destructive) { timer.stop() }
+                        }
+                        .buttonStyle(.borderless)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                     .background(.mint.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
                     .accessibilityElement(children: .contain)

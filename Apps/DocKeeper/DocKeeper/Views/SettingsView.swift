@@ -11,6 +11,8 @@ struct SettingsView: View {
     @State private var exportURL: URL?
     @State private var isExporting = false
     @State private var errorMessage: String?
+    // Observed so the status below updates after returning from the Paperless screen.
+    @AppStorage(PaperlessConfiguration.serverURLKey) private var paperlessServerString = ""
 
     var body: some View {
         NavigationStack {
@@ -58,7 +60,7 @@ struct SettingsView: View {
                     } label: {
                         Label("Paperless-ngx", systemImage: "server.rack")
                     }
-                    if PaperlessConfiguration.serverURL != nil {
+                    if !paperlessServerString.isEmpty, PaperlessConfiguration.serverURL != nil {
                         Label("Server configured; uploads are explicit", systemImage: "checkmark.circle")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
@@ -134,6 +136,11 @@ struct SettingsView: View {
         isExporting = true
         defer { isExporting = false }
         do {
+            // Each archive is a full copy of the library; do not leave the previous one behind.
+            if let previous = exportURL {
+                exportURL = nil
+                try? FileManager.default.removeItem(at: previous)
+            }
             exportURL = try DocumentExportService.makeArchive(for: documents)
         } catch {
             errorMessage = "Export stopped: \(error.localizedDescription)"

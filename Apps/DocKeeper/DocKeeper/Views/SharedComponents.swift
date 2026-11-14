@@ -100,6 +100,7 @@ struct ProcessingOverlay: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(message)
+        .accessibilityAddTraits(.isModal)
     }
 }
 

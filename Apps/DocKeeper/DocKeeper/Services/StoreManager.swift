@@ -44,6 +44,7 @@ final class StoreManager: ObservableObject {
     }
 
     func loadProducts() async {
+        guard !isLoading else { return }
         isLoading = true
         defer { isLoading = false }
         do {
@@ -103,6 +104,8 @@ final class StoreManager: ObservableObject {
             try await AppStore.sync()
             await updateEntitlements()
             statusMessage = isPro ? "Your Pro purchase was restored." : "No active DocKeeper Pro purchase was found."
+        } catch StoreKitError.userCancelled {
+            // The user dismissed the App Store sign-in prompt; this is not an error.
         } catch {
             errorMessage = "Purchases could not be restored: \(error.localizedDescription)"
         }

@@ -18,7 +18,8 @@ struct SetEditorView: View {
     @State private var showCardio = false
     @State private var validationError: String?
 
-    init(set: WorkoutSet, onSave: @escaping (WorkoutSet) -> Void) {
+    /// `markCompleted` pre-enables the Completed toggle when the editor was opened by trying to complete an empty set.
+    init(set: WorkoutSet, markCompleted: Bool = false, onSave: @escaping (WorkoutSet) -> Void) {
         self.set = set
         self.onSave = onSave
         let storedUnit = WeightUnit(rawValue: UserDefaults.standard.string(forKey: "defaultWeightUnit") ?? "kg") ?? .kilograms
@@ -30,7 +31,7 @@ struct SetEditorView: View {
         _rpe = State(initialValue: set.rpe ?? 8)
         _kind = State(initialValue: set.kind)
         _note = State(initialValue: set.note)
-        _isCompleted = State(initialValue: set.isCompleted)
+        _isCompleted = State(initialValue: set.isCompleted || markCompleted)
         _showCardio = State(initialValue: set.distanceMeters > 0 || set.durationSeconds > 0)
     }
 
@@ -103,15 +104,17 @@ struct SetEditorView: View {
     }
 
     private func save() {
-        guard let weight = NumberParsing.double(weightText), weight.isFinite, weight >= 0, weight <= 10_000_000 else {
+        // Blank weight or reps means zero (bodyweight, distance-only, or time-only sets).
+        let isBlank: (String) -> Bool = { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        guard let weight = isBlank(weightText) ? 0 : NumberParsing.double(weightText), weight.isFinite, weight >= 0, weight <= 10_000_000 else {
             validationError = "Enter a valid, non-negative weight."
             return
         }
-        guard let reps = NumberParsing.double(repsText), reps.isFinite, reps >= 0, reps <= 1_000_000, reps.rounded() == reps else {
+        guard let reps = isBlank(repsText) ? 0 : NumberParsing.double(repsText), reps.isFinite, reps >= 0, reps <= 1_000_000, reps.rounded() == reps else {
             validationError = "Enter a whole number of repetitions."
             return
         }
-        let distance = distanceText.isEmpty ? 0 : NumberParsing.double(distanceText)
+        let distance = isBlank(distanceText) ? 0 : NumberParsing.double(distanceText)
         guard let distance, distance.isFinite, distance >= 0 else {
             validationError = "Enter a valid, non-negative distance in meters."
             return

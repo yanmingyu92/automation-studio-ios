@@ -40,6 +40,7 @@ struct SpeechModelView: View {
                     if case .ready = transcription.setupState {
                         Button("Remove downloaded model", role: .destructive) { confirmRemoval = true }
                             .buttonStyle(SecondaryButtonStyle())
+                            .disabled(transcription.isTranscribing)
                     }
 
                     VStack(alignment: .leading, spacing: 10) {
@@ -124,6 +125,9 @@ struct SpeechModelView: View {
                     .foregroundStyle(.secondary)
                 Button("Try again") { transcription.prepareModel() }
                     .buttonStyle(PrimaryButtonStyle())
+                if transcription.hasDownloadedModel {
+                    Button("Remove downloaded model", role: .destructive) { confirmRemoval = true }
+                }
             }
             if !transcription.statusMessage.isEmpty {
                 Text(transcription.statusMessage)

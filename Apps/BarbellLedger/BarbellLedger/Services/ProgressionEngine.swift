@@ -66,7 +66,7 @@ enum ProgressionEngine {
             return ProgressionSuggestion(
                 weightKilograms: weight,
                 targetReps: rule.minimumReps,
-                reason: "All \(sets.count) previous working sets reached \(rule.maximumReps) reps.\(rpeText) Added \(rule.weeklyIncrementKilograms.cleanString) kg to the last top set. You can override it.",
+                reason: "\(sets.count == 1 ? "The previous working set" : "All \(sets.count) previous working sets") reached \(rule.maximumReps) reps.\(rpeText) Added \(rule.weeklyIncrementKilograms.cleanString) kg to the last top set. You can override it.",
                 isDeload: false
             )
         }

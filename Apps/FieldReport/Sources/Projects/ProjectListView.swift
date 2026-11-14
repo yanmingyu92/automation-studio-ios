@@ -6,6 +6,7 @@ struct ProjectListView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var store: StoreManager
     @EnvironmentObject private var quota: ExportQuota
+    @EnvironmentObject private var transcription: TranscriptionManager
     @State private var isAddingProject = false
     @State private var searchText = ""
     @State private var projectToDelete: InspectionProject?
@@ -133,6 +134,7 @@ struct ProjectListView: View {
             Image(systemName: store.isPro ? "checkmark.seal.fill" : "doc.badge.arrow.up")
                 .font(.title2)
                 .foregroundStyle(Color.fieldTeal)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 3) {
                 Text(store.isPro ? "FieldReport Pro" : "Free report exports")
                     .font(.headline)
@@ -148,6 +150,11 @@ struct ProjectListView: View {
     }
 
     private func delete(_ project: InspectionProject) {
+        // A transcription started in this project keeps running after leaving the editor; stop it before
+        // its audio file and finding are removed.
+        if let active = transcription.activeFindingID, project.findings.contains(where: { $0.id == active }) {
+            transcription.cancelTranscription()
+        }
         let audioFiles = project.findings.compactMap(\.audioFileName)
         let photoFiles = project.findings.flatMap { finding in
             finding.photos.map { ($0.fileName, $0.thumbnailFileName) }
@@ -208,9 +215,11 @@ private struct ProjectCard: View {
                 let mediaCount = project.findings.reduce(0) { $0 + $1.photos.count }
                 if mediaCount > 0 {
                     Label("\(mediaCount)", systemImage: "photo")
+                        .accessibilityLabel("\(mediaCount) photo\(mediaCount == 1 ? "" : "s")")
                 }
                 Image(systemName: "chevron.right")
                     .font(.caption.bold())
+                    .accessibilityHidden(true)
             }
             .font(.caption)
             .foregroundStyle(.secondary)

@@ -98,6 +98,8 @@ final class StoreManager {
             try await AppStore.sync()
             await refreshEntitlements()
             statusMessage = isPro ? "Your BarbellLedger Pro purchase was restored." : "No current BarbellLedger Pro entitlement was found for this Apple Account."
+        } catch StoreKitError.userCancelled {
+            statusMessage = "Restore cancelled."
         } catch {
             errorMessage = "Could not restore purchases: \(error.localizedDescription)"
         }

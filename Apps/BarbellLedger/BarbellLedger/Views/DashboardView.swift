@@ -26,10 +26,11 @@ struct DashboardView: View {
                             Image(systemName: "bolt.fill")
                                 .font(.title2)
                                 .foregroundStyle(.orange)
+                                .accessibilityHidden(true)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Workout in progress")
                                     .font(.headline)
-                                Text("\(activeWorkout.name) · \(activeWorkout.completedSets.count) sets logged")
+                                Text("\(activeWorkout.name) · \(activeWorkout.completedSets.count.counted("set")) logged")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
@@ -67,15 +68,17 @@ struct DashboardView: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(routine.name).font(.headline)
-                                    Text("\(routine.orderedEntries.count) exercises")
+                                    Text(routine.orderedEntries.count.counted("exercise"))
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
                                 Image(systemName: "play.fill")
+                                    .accessibilityHidden(true)
                             }
                         }
                         .disabled(activeWorkout != nil)
+                        .accessibilityHint(activeWorkout == nil ? "Starts a workout from this routine" : "Unavailable while another workout is in progress")
                     }
                 }
             }
@@ -92,7 +95,7 @@ struct DashboardView: View {
                                 Text(workout.startedAt.dayAndTime)
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                Text("\(workout.completedSets.count) sets · \(unit.fromKilograms(workout.completedSets.reduce(0) { $0 + $1.volumeKilograms }).cleanString) \(unit.label) volume")
+                                Text("\(workout.completedSets.count.counted("set")) · \(unit.fromKilograms(workout.completedSets.reduce(0) { $0 + $1.volumeKilograms }).cleanString) \(unit.label) volume")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }

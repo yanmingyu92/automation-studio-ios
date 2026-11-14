@@ -3,6 +3,7 @@ import SwiftUI
 
 struct PaywallView: View {
     @EnvironmentObject private var store: StoreManager
+    @EnvironmentObject private var quota: ExportQuota
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -17,7 +18,8 @@ struct PaywallView: View {
                         Text("Keep every site moving")
                             .font(.largeTitle.bold())
                             .foregroundStyle(Color.fieldInk)
-                        Text("You have used the three free report exports. FieldReport Pro unlocks unlimited professional PDFs while keeping capture, transcription, and editing on your device.")
+                        Text((quota.canExport(isPro: false) ? "" : "You have used the three free report exports. ") + "FieldReport Pro unlocks unlimited professional PDFs while keeping capture, transcription, and editing on your device.")
+                            .fixedSize(horizontal: false, vertical: true)
                             .font(.body)
                             .foregroundStyle(.secondary)
                     }
@@ -56,14 +58,15 @@ struct PaywallView: View {
                                             Text(product.description)
                                                 .font(.caption)
                                                 .foregroundStyle(.secondary)
-                                                .lineLimit(2)
                                         }
+                                        .fixedSize(horizontal: false, vertical: true)
                                         Spacer()
                                         if store.purchasingProductID == product.id {
                                             ProgressView()
                                         } else {
-                                            Text(product.displayPrice)
+                                            Text(priceText(for: product))
                                                 .font(.headline)
+                                                .multilineTextAlignment(.trailing)
                                         }
                                     }
                                     .padding(16)
@@ -87,6 +90,10 @@ struct PaywallView: View {
                     Text("Payment is handled by Apple. Paid subscriptions renew automatically unless cancelled in your Apple Account settings. Prices and availability come directly from the App Store.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                    Link("Terms of Use (Apple Standard EULA)", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                        .font(.footnote)
+                    Link("Privacy Policy", destination: URL(string: "https://yanmingyu92.github.io/automation-studio-ios/fieldreport/privacy.html")!)
+                        .font(.footnote)
                 }
                 .padding(24)
             }
@@ -115,5 +122,21 @@ struct PaywallView: View {
             }
             .errorAlert($store.errorMessage)
         }
+    }
+
+    /// App Store price, with the billing period for auto-renewing subscriptions.
+    private func priceText(for product: Product) -> String {
+        guard let period = product.subscription?.subscriptionPeriod else { return product.displayPrice }
+        let unit: String
+        switch period.unit {
+        case .day: unit = "day"
+        case .week: unit = "week"
+        case .month: unit = "month"
+        case .year: unit = "year"
+        @unknown default: return product.displayPrice
+        }
+        return period.value == 1
+            ? "\(product.displayPrice) / \(unit)"
+            : "\(product.displayPrice) / \(period.value) \(unit)s"
     }
 }

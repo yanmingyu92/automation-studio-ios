@@ -29,6 +29,7 @@ struct ExercisePickerSheet: View {
                                 }
                                 Spacer()
                                 Image(systemName: "plus.circle")
+                                    .accessibilityHidden(true)
                             }
                         }
                     }
@@ -264,7 +265,10 @@ struct ProgressionRuleEditor: View {
                 Stepper("Rep range ends at \(rule.maximumReps)", value: $rule.maximumReps, in: 1...100)
                     .onChange(of: rule.maximumReps) { _, value in rule.minimumReps = min(value, rule.minimumReps) }
                 VStack(alignment: .leading) {
-                    Slider(value: $rule.rpeCeiling, in: 5...10, step: 0.5)
+                    Slider(value: $rule.rpeCeiling, in: 5...10, step: 0.5) {
+                        Text("RPE ceiling")
+                    }
+                    .accessibilityValue("\(rule.rpeCeiling.cleanString) out of 10")
                     Text("Increase only when average RPE is \(rule.rpeCeiling.cleanString) or lower")
                         .font(.caption)
                         .foregroundStyle(.secondary)

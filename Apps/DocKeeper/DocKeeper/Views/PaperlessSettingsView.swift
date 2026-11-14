@@ -85,7 +85,9 @@ struct PaperlessSettingsView: View {
         do {
             let url = try PaperlessService.validatedServerURL(from: serverString)
             let savedToken = try KeychainStore.paperlessToken()
-            guard let resolvedToken = token.isEmpty ? savedToken : token, !resolvedToken.isEmpty else {
+            // A pasted token often carries a trailing space or newline, which the server rejects.
+            let enteredToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard let resolvedToken = enteredToken.isEmpty ? savedToken : enteredToken, !resolvedToken.isEmpty else {
                 throw PaperlessError.notConfigured
             }
             try await service.testConnection(serverURL: url, token: resolvedToken)

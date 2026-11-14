@@ -29,6 +29,7 @@ struct ProjectDetailView: View {
                         Image(systemName: "list.clipboard")
                             .font(.largeTitle)
                             .foregroundStyle(Color.fieldTeal)
+                            .accessibilityHidden(true)
                         Text("No findings yet")
                             .font(.headline)
                         Text("Add a manual finding, then attach photos and a voice note when useful.")
@@ -158,12 +159,15 @@ private struct FindingCard: View {
             HStack(spacing: 16) {
                 if !finding.photos.isEmpty {
                     Label("\(finding.photos.count)", systemImage: "photo.on.rectangle")
+                        .accessibilityLabel("\(finding.photos.count) photo\(finding.photos.count == 1 ? "" : "s")")
                 }
                 if finding.audioFileName != nil {
                     Label(formattedDuration(finding.audioDuration), systemImage: "waveform")
+                        .accessibilityLabel("Voice note \(formattedDuration(finding.audioDuration))")
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
+                    .accessibilityHidden(true)
             }
             .font(.caption)
             .foregroundStyle(.secondary)

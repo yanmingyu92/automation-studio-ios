@@ -147,6 +147,8 @@ struct DocumentDetailView: View {
                 Button("Delete Document", systemImage: "trash", role: .destructive) {
                     confirmingDelete = true
                 }
+                // An in-flight OCR or upload writes back to this record when it finishes.
+                .disabled(isRecognizingText || isUploading)
             }
         }
         .navigationTitle(document.title)
@@ -248,6 +250,8 @@ struct DocumentDetailView: View {
     }
 
     private func deleteDocument() {
+        // Read the identifier first: a deleted model must not be accessed after the save.
+        let documentID = document.id
         let pendingDeletion: DocumentFileStore.PendingPDFDeletion
         do {
             pendingDeletion = try DocumentFileStore.beginPDFDeletion(forRelativePath: document.localPDFPath)
@@ -270,7 +274,7 @@ struct DocumentDetailView: View {
             return
         }
 
-        notifications.cancelReminders(for: document)
+        notifications.cancelReminders(forDocumentID: documentID)
         try? DocumentFileStore.finishPDFDeletion(pendingDeletion)
         dismiss()
     }

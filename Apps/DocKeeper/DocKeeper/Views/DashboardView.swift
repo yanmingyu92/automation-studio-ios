@@ -110,6 +110,7 @@ private struct DashboardSection: View {
                                 }
                                 Spacer()
                                 Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
+                                    .accessibilityHidden(true)
                             }
                             .padding()
                         }

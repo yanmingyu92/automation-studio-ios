@@ -4,6 +4,7 @@ import SwiftUI
 
 struct AnalyticsView: View {
     @Environment(StoreManager.self) private var store
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage("defaultWeightUnit") private var unit: WeightUnit = .kilograms
     @Query(sort: \Workout.startedAt, order: .reverse) private var workouts: [Workout]
     @Query(sort: \Exercise.name) private var exercises: [Exercise]
@@ -16,7 +17,7 @@ struct AnalyticsView: View {
     var body: some View {
         List {
             Section("Overview") {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                LazyVGrid(columns: dynamicTypeSize.isAccessibilitySize ? [GridItem(.flexible())] : [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     MetricCard(title: "All-time workouts", value: "\(completed.count)", systemImage: "calendar.badge.checkmark")
                     MetricCard(title: "Detected records", value: "\(recordEvents.reduce(0) { $0 + $1.labels.count })", systemImage: "trophy.fill", tint: .orange)
                 }
@@ -113,7 +114,7 @@ struct AnalyticsView: View {
                     .foregroundStyle(.orange.gradient)
                     .cornerRadius(4)
                     .accessibilityLabel(point.date.formatted(.dateTime.month()))
-                    .accessibilityValue("\(point.count) records")
+                    .accessibilityValue(point.count.counted("record"))
             }
             .frame(height: 200)
             .chartYAxis { AxisMarks(values: .stride(by: 1)) }

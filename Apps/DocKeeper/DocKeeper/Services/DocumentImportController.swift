@@ -45,7 +45,11 @@ final class DocumentImportController: ObservableObject {
 
         do {
             processingMessage = "Reading your document…"
-            let data = try Data(contentsOf: url)
+            // Read off the main actor so a large or slow (network/iCloud) file cannot freeze the UI.
+            let data = try await Task.detached(priority: .userInitiated) {
+                try Data(contentsOf: url)
+            }.value
+            try Task.checkCancellation()
             let type = UTType(filenameExtension: url.pathExtension.lowercased())
             if type?.conforms(to: .pdf) == true {
                 await process(
@@ -77,6 +81,7 @@ final class DocumentImportController: ObservableObject {
             try Task.checkCancellation()
             let path = try DocumentFileStore.savePDF(pdfData)
             savedPath = path
+            DocumentFileStore.registerDraftPDF(path)
             let thumbnail = DocumentFileStore.thumbnail(forPDFData: pdfData)
 
             processingMessage = "Recognizing text on this device…"
@@ -102,8 +107,8 @@ final class DocumentImportController: ObservableObject {
                 processingWarning: warning
             )
         } catch {
-            if let savedPath {
-                try? DocumentFileStore.deletePDF(forRelativePath: savedPath)
+            if let savedPath, (try? DocumentFileStore.deletePDF(forRelativePath: savedPath)) != nil {
+                DocumentFileStore.unregisterDraftPDF(savedPath)
             }
             present(error)
         }

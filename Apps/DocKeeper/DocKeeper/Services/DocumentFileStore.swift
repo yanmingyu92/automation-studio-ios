@@ -93,6 +93,31 @@ enum DocumentFileStore {
         }
     }
 
+    // Unsaved drafts exist only in memory, so a draft PDF would be orphaned if the app
+    // is terminated while the editor is open. Their file names are recorded here so the
+    // next launch can remove any that never became a saved document.
+    private static let pendingDraftsKey = "documents.pendingDraftPDFs"
+
+    static var registeredDraftPDFs: [String] {
+        UserDefaults.standard.stringArray(forKey: pendingDraftsKey) ?? []
+    }
+
+    static func registerDraftPDF(_ path: String) {
+        var paths = registeredDraftPDFs
+        guard !paths.contains(path) else { return }
+        paths.append(path)
+        UserDefaults.standard.set(paths, forKey: pendingDraftsKey)
+    }
+
+    static func unregisterDraftPDF(_ path: String) {
+        let paths = registeredDraftPDFs.filter { $0 != path }
+        if paths.isEmpty {
+            UserDefaults.standard.removeObject(forKey: pendingDraftsKey)
+        } else {
+            UserDefaults.standard.set(paths, forKey: pendingDraftsKey)
+        }
+    }
+
     static func beginPDFDeletion(forRelativePath path: String) throws -> PendingPDFDeletion {
         let originalURL = try url(forRelativePath: path)
         let manager = FileManager.default

@@ -94,7 +94,11 @@ final class NotificationManager: ObservableObject {
     }
 
     func cancelReminders(for document: DocumentRecord) {
-        center.removePendingNotificationRequests(withIdentifiers: identifiers(for: document))
+        cancelReminders(forDocumentID: document.id)
+    }
+
+    func cancelReminders(forDocumentID id: UUID) {
+        center.removePendingNotificationRequests(withIdentifiers: identifiers(forDocumentID: id))
     }
 
     private func makeRequest(
@@ -132,9 +136,13 @@ final class NotificationManager: ObservableObject {
     }
 
     private func identifiers(for document: DocumentRecord) -> [String] {
+        identifiers(forDocumentID: document.id)
+    }
+
+    private func identifiers(forDocumentID id: UUID) -> [String] {
         [
-            "\(document.id.uuidString).expiry",
-            "\(document.id.uuidString).renewal"
+            "\(id.uuidString).expiry",
+            "\(id.uuidString).renewal"
         ]
     }
 }

@@ -85,6 +85,13 @@ struct ProView: View {
                     Text("Your documents are never deleted or locked because you do not subscribe. Existing documents remain available if a subscription ends.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                    Text("The yearly plan is an auto-renewing subscription. It renews at the price shown each year unless cancelled at least 24 hours before the period ends. Manage or cancel it in your Apple Account settings.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                    Link("Terms of Use (Apple Standard EULA)", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                        .font(.footnote)
+                    Link("Privacy Policy", destination: URL(string: "https://yanmingyu92.github.io/automation-studio-ios/dockeeper/privacy.html")!)
+                        .font(.footnote)
                 }
             }
             .navigationTitle("DocKeeper Pro")
@@ -94,7 +101,12 @@ struct ProView: View {
                     Button("Done") { dismiss() }
                 }
             }
-            .task { await store.updateEntitlements() }
+            .task {
+                // Products are otherwise loaded only once at launch, so an offline launch
+                // would leave the paywall empty until the app was restarted.
+                if store.products.isEmpty { await store.loadProducts() }
+                await store.updateEntitlements()
+            }
         }
     }
 }

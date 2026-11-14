@@ -93,6 +93,13 @@ struct PaywallView: View {
                     Text("Purchases and restoration are handled by Apple with your Apple Account. An active, unrevoked entitlement is required for Pro features. No health or coaching outcome is promised.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    Text("The yearly plan is an auto-renewing subscription. It renews at the price shown each year unless cancelled at least 24 hours before the period ends. Manage or cancel it in your Apple Account settings.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Link("Terms of Use (Apple Standard EULA)", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                        .font(.footnote)
+                    Link("Privacy Policy", destination: URL(string: "https://yanmingyu92.github.io/automation-studio-ios/barbellledger/privacy.html")!)
+                        .font(.footnote)
                 }
                 .padding()
             }

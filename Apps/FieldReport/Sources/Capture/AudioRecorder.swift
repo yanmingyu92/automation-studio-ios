@@ -63,7 +63,7 @@ final class AudioRecorder: NSObject, ObservableObject {
 
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.record, mode: .spokenAudio, options: [.allowBluetoothHFP])
+            try session.setCategory(.record, mode: .default, options: [.allowBluetoothHFP])
             try session.setActive(true)
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".m4a")
             let settings: [String: Any] = [
@@ -81,6 +81,8 @@ final class AudioRecorder: NSObject, ObservableObject {
             duration = 0
             audioLevel = 0
             isRecording = true
+            // Auto-lock would move the app to the background and end the recording mid-sentence.
+            UIApplication.shared.isIdleTimerDisabled = true
             startMetering()
         } catch {
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
@@ -126,11 +128,9 @@ final class AudioRecorder: NSObject, ObservableObject {
         case .denied:
             return false
         case .undetermined:
-            return await withCheckedContinuation { continuation in
-                AVAudioApplication.requestRecordPermission { granted in
-                    continuation.resume(returning: granted)
-                }
-            }
+            // The async form avoids a main-actor-isolated completion block, which the system may call
+            // on another thread and which traps under Swift 6 isolation checking.
+            return await AVAudioApplication.requestRecordPermission()
         @unknown default:
             return false
         }
@@ -150,6 +150,7 @@ final class AudioRecorder: NSObject, ObservableObject {
     }
 
     private func stopMetering() {
+        UIApplication.shared.isIdleTimerDisabled = false
         meterTimer?.invalidate()
         meterTimer = nil
         audioLevel = 0

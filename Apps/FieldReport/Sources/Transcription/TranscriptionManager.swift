@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UIKit
 @preconcurrency import WhisperKit
 
 enum SpeechModel: String, CaseIterable, Identifiable {
@@ -92,13 +93,23 @@ final class TranscriptionManager: ObservableObject {
     }
 
     @Published var selectedModel: SpeechModel {
-        didSet { defaults.set(selectedModel.rawValue, forKey: Keys.selectedModel) }
+        didSet {
+            defaults.set(selectedModel.rawValue, forKey: Keys.selectedModel)
+            // A different variant is not on disk yet; never present it as "downloaded, load it".
+            if !setupState.isBusy, setupState != .ready {
+                setupState = downloadedFolderForSelection() == nil ? .notDownloaded : .downloaded
+            }
+        }
     }
     @Published var language: TranscriptionLanguage {
         didSet { defaults.set(language.rawValue, forKey: Keys.language) }
     }
-    @Published private(set) var setupState: SetupState = .notDownloaded
-    @Published private(set) var isTranscribing = false
+    @Published private(set) var setupState: SetupState = .notDownloaded {
+        didSet { updateIdleTimer() }
+    }
+    @Published private(set) var isTranscribing = false {
+        didSet { updateIdleTimer() }
+    }
     @Published private(set) var activeFindingID: UUID?
     @Published private(set) var partialTranscript = ""
     @Published private(set) var statusMessage = ""
@@ -114,6 +125,7 @@ final class TranscriptionManager: ObservableObject {
     private var whisperKit: WhisperKit?
     private var modelFolder: URL?
     private var setupTask: Task<Void, Never>?
+    private var isHoldingIdleTimer = false
     private let setupCancellation = CancellationFlag()
     private let transcriptionCancellation = CancellationFlag()
     private let downloadProgress = DownloadProgressBox()
@@ -134,15 +146,19 @@ final class TranscriptionManager: ObservableObject {
     }
 
     func cancelSetup() {
+        guard setupState.isBusy else { return }
         setupCancellation.cancel()
         downloadProgress.cancel()
         setupTask?.cancel()
         statusMessage = "Cancelling model setup…"
     }
 
+    /// True when a model folder exists on disk, including after a failed load.
+    var hasDownloadedModel: Bool { modelFolder != nil }
+
     func removeModel() {
-        cancelSetup()
-        transcriptionCancellation.cancel()
+        // Unloading while a download, load, or transcription is running is unsafe; the UI disables removal then.
+        guard !setupState.isBusy, !isTranscribing else { return }
         setupTask = Task { [weak self] in
             guard let self else { return }
             await self.whisperKit?.unloadModels()
@@ -243,9 +259,11 @@ final class TranscriptionManager: ObservableObject {
                     }
                 )
                 try Task.checkCancellation()
-                modelFolder = folder
-                defaults.set(folder.path, forKey: Keys.modelPath)
-                defaults.set(selectedModel.rawValue, forKey: Keys.modelVariant)
+                if let previous = modelFolder, previous.standardizedFileURL != folder.standardizedFileURL {
+                    // Only one variant is tracked; do not leave the replaced one orphaned on disk.
+                    try? LocalFileStore.removeModel(at: previous)
+                }
+                recordModelLocation(folder)
             }
 
             guard !setupCancellation.isCancelled else {
@@ -271,9 +289,7 @@ final class TranscriptionManager: ObservableObject {
                 return
             }
             whisperKit = pipeline
-            modelFolder = folder
-            defaults.set(folder.path, forKey: Keys.modelPath)
-            defaults.set(selectedModel.rawValue, forKey: Keys.modelVariant)
+            recordModelLocation(folder)
             setupState = .ready
             statusMessage = "Speech model ready. Transcription now works offline."
         } catch {
@@ -287,10 +303,28 @@ final class TranscriptionManager: ObservableObject {
         }
     }
 
+    private func recordModelLocation(_ folder: URL) {
+        modelFolder = folder
+        // Persist relative to the model directory: the container path changes across installs and updates.
+        defaults.set(LocalFileStore.relativeModelPath(for: folder) ?? folder.path, forKey: Keys.modelPath)
+        defaults.set(selectedModel.rawValue, forKey: Keys.modelVariant)
+    }
+
+    private func updateIdleTimer() {
+        // Auto-lock suspends the app, which stalls or fails a download, model load, or transcription.
+        let shouldHold = setupState.isBusy || isTranscribing
+        guard shouldHold != isHoldingIdleTimer else { return }
+        isHoldingIdleTimer = shouldHold
+        UIApplication.shared.isIdleTimerDisabled = shouldHold
+    }
+
     private func restoreModelLocation() {
         guard let path = defaults.string(forKey: Keys.modelPath),
-              FileManager.default.fileExists(atPath: path) else { return }
-        modelFolder = URL(fileURLWithPath: path)
+              let folder = LocalFileStore.modelURL(storedPath: path) else { return }
+        modelFolder = folder
+        if let relative = LocalFileStore.relativeModelPath(for: folder), relative != path {
+            defaults.set(relative, forKey: Keys.modelPath)
+        }
         if let variant = defaults.string(forKey: Keys.modelVariant), let model = SpeechModel(rawValue: variant) {
             selectedModel = model
         }

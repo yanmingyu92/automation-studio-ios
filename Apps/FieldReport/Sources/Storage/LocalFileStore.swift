@@ -32,7 +32,37 @@ enum LocalFileStore {
     }
 
     static func audioDirectory() throws -> URL { try directory("Audio") }
-    static func modelDirectory() throws -> URL { try directory("Models") }
+    /// Speech models can be downloaded again, so they are kept out of device backups.
+    static func modelDirectory() throws -> URL {
+        var url = try directory("Models")
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try? url.setResourceValues(values)
+        return url
+    }
+
+    /// Path of a downloaded model relative to the model directory. The app container path changes between
+    /// installs and updates, so only this relative form is safe to persist.
+    static func relativeModelPath(for url: URL) -> String? {
+        guard let models = try? modelDirectory().standardizedFileURL else { return nil }
+        let prefix = models.path + "/"
+        let candidate = url.standardizedFileURL.path
+        guard candidate.hasPrefix(prefix) else { return nil }
+        return String(candidate.dropFirst(prefix.count))
+    }
+
+    /// Resolves a persisted model location. Accepts the relative form and absolute paths written by earlier builds.
+    static func modelURL(storedPath: String) -> URL? {
+        guard let models = try? modelDirectory() else { return nil }
+        var relative = storedPath
+        if storedPath.hasPrefix("/") {
+            guard let range = storedPath.range(of: "/FieldReport/Models/", options: .backwards) else { return nil }
+            relative = String(storedPath[range.upperBound...])
+        }
+        guard !relative.isEmpty, !relative.split(separator: "/").contains("..") else { return nil }
+        let url = models.appendingPathComponent(relative, isDirectory: true)
+        return fileManager.fileExists(atPath: url.path) ? url : nil
+    }
 
     static func audioURL(fileName: String) throws -> URL {
         try audioDirectory().appendingPathComponent(fileName)
@@ -58,8 +88,9 @@ enum LocalFileStore {
         let identifier = UUID().uuidString
         let fileName = identifier + ".jpg"
         let thumbnailFileName = identifier + "-thumb.jpg"
-        let image = source.normalized().resized(maxDimension: 2_400)
-        let thumbnail = source.normalized().resized(maxDimension: 480)
+        // Downscale before normalizing orientation so a full-resolution bitmap is never rendered.
+        let image = source.resized(maxDimension: 2_400).normalized()
+        let thumbnail = image.resized(maxDimension: 480)
         guard let imageData = image.jpegData(compressionQuality: 0.84),
               let thumbnailData = thumbnail.jpegData(compressionQuality: 0.8) else {
             throw StoreError.invalidImage
@@ -70,10 +101,15 @@ enum LocalFileStore {
             to: photos.appendingPathComponent(fileName),
             options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
         )
-        try thumbnailData.write(
-            to: thumbnails.appendingPathComponent(thumbnailFileName),
-            options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
-        )
+        do {
+            try thumbnailData.write(
+                to: thumbnails.appendingPathComponent(thumbnailFileName),
+                options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
+            )
+        } catch {
+            try? fileManager.removeItem(at: photos.appendingPathComponent(fileName))
+            throw error
+        }
         return (fileName, thumbnailFileName)
     }
 
@@ -123,7 +159,10 @@ enum LocalFileStore {
 private extension UIImage {
     func normalized() -> UIImage {
         guard imageOrientation != .up else { return self }
-        return UIGraphicsImageRenderer(size: size, format: .default()).image { _ in
+        // Keep the image's own scale; the default format would multiply the pixel count by the screen scale.
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = scale
+        return UIGraphicsImageRenderer(size: size, format: format).image { _ in
             draw(in: CGRect(origin: .zero, size: size))
         }
     }

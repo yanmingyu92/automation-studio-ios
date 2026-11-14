@@ -12,6 +12,7 @@ struct WorkoutSessionView: View {
     @Bindable var workout: Workout
 
     @State private var editingSet: WorkoutSet?
+    @State private var completingSetID: UUID?
     @State private var showingExercisePicker = false
     @State private var showingRestTimer = false
     @State private var showingPaywall = false
@@ -73,7 +74,6 @@ struct WorkoutSessionView: View {
                 }
                 .listRowBackground(Color.clear)
             }
-            .environment(\.editMode, $editMode)
             .navigationTitle(workout.startedAt.mediumDay)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -85,9 +85,15 @@ struct WorkoutSessionView: View {
                     EditButton()
                 }
             }
-            .sheet(item: $editingSet) { set in
-                SetEditorView(set: set) { edited in
-                    if edited.isCompleted { updateRecords(for: edited) }
+            .sheet(item: $editingSet, onDismiss: { completingSetID = nil }) { set in
+                let completing = completingSetID == set.id
+                SetEditorView(set: set, markCompleted: completing) { edited in
+                    if edited.isCompleted {
+                        updateRecords(for: edited)
+                        if completing, autoStartRest, let item = edited.workoutExercise {
+                            Task { await timer.start(seconds: TimeInterval(item.restSeconds)) }
+                        }
+                    }
                     save()
                 }
             }
@@ -110,10 +116,19 @@ struct WorkoutSessionView: View {
             .alert("Workout Error", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
                 Button("OK") { errorMessage = nil }
             } message: { Text(errorMessage ?? "") }
+            // Applied outside .toolbar so the EditButton and the List share the same edit mode.
+            .environment(\.editMode, $editMode)
         }
     }
 
     private func toggle(_ set: WorkoutSet, in item: WorkoutExercise) {
+        // An empty set cannot be completed directly: it would be saved to history as "0 × 0"
+        // and let the workout finish with no real data. Ask for values first.
+        if !set.isCompleted, set.weightKilograms <= 0, set.reps <= 0, set.distanceMeters <= 0, set.durationSeconds <= 0 {
+            completingSetID = set.id
+            editingSet = set
+            return
+        }
         set.isCompleted.toggle()
         set.completedAt = set.isCompleted ? .now : nil
         if set.isCompleted {
@@ -309,7 +324,7 @@ struct WorkoutExerciseCard: View {
                             Text(set.kind.shortLabel)
                                 .font(.caption.weight(.bold))
                                 .foregroundStyle(set.kind.color)
-                                .frame(width: 26)
+                                .frame(minWidth: 26)
                             VStack(alignment: .leading, spacing: 3) {
                                 Text("\(unit.fromKilograms(set.weightKilograms).cleanString) \(unit.label) × \(set.reps)")
                                     .font(.body.weight(.medium))
@@ -326,7 +341,7 @@ struct WorkoutExerciseCard: View {
                         }
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("Edit \(set.kind.label) set, \(unit.fromKilograms(set.weightKilograms).cleanString) \(unit.label), \(set.reps) repetitions")
+                    .accessibilityLabel("Edit set \(set.order + 1), \(set.kind.label), \(unit.fromKilograms(set.weightKilograms).cleanString) \(unit.label), \(set.reps.counted("repetition")), \(set.isCompleted ? "completed" : "not completed")")
                     Button {
                         onToggleSet(set)
                     } label: {
@@ -335,7 +350,7 @@ struct WorkoutExerciseCard: View {
                             .foregroundStyle(set.isCompleted ? .green : .secondary)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(set.isCompleted ? "Mark set incomplete" : "Complete set")
+                    .accessibilityLabel(set.isCompleted ? "Mark set \(set.order + 1) incomplete" : "Complete set \(set.order + 1)")
                 }
                 .contextMenu {
                     Button("Move earlier", systemImage: "arrow.up") { onMoveSet(set, -1) }
@@ -356,6 +371,7 @@ struct WorkoutExerciseCard: View {
                 Spacer()
                 Text("\(item.orderedSets.filter(\.isCompleted).count)/\(item.orderedSets.count)")
                     .font(.caption)
+                    .accessibilityLabel("\(item.orderedSets.filter(\.isCompleted).count) of \(item.orderedSets.count.counted("set")) completed")
             }
         }
     }
