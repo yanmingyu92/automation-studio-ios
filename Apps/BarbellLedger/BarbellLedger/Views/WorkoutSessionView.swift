@@ -29,7 +29,14 @@ struct WorkoutSessionView: View {
     @State private var errorMessage: String?
     @State private var exercisePendingRemoval: WorkoutExercise?
 
+    /// Set before the model is deleted so the body stops reading it; SwiftData traps on access to a deleted, saved model.
+    @State private var isDiscarded = false
+
     var body: some View {
+        if isDiscarded { Color.clear } else { content }
+    }
+
+    @ViewBuilder private var content: some View {
         NavigationStack {
             List {
                 Section {
@@ -61,8 +68,8 @@ struct WorkoutSessionView: View {
                         onMoveSet: { move($0, direction: $1, in: item) },
                         onApplySuggestion: { apply($0, to: item) },
                         onUnlock: { showingPaywall = true },
-                        canMoveEarlier: item.id != workout.orderedExercises.first?.id,
-                        canMoveLater: item.id != workout.orderedExercises.last?.id,
+                        canMoveEarlier: item.order > 0,
+                        canMoveLater: item.order < (workout.exercises?.count ?? 0) - 1,
                         onMoveExercise: { moveExercise(item, direction: $0) },
                         onRemoveExercise: { exercisePendingRemoval = item }
                     )
@@ -259,8 +266,9 @@ struct WorkoutSessionView: View {
 
     private func discard() {
         timer.stop()
+        isDiscarded = true
         modelContext.delete(workout)
-        if save() { dismiss() }
+        if save() { dismiss() } else { isDiscarded = false }
     }
 
     @discardableResult
@@ -408,6 +416,7 @@ struct WorkoutExerciseCard: View {
                         .frame(minWidth: 44, minHeight: 32, alignment: .trailing)
                 }
                 .accessibilityLabel("Options for \(item.exerciseName)")
+                .textCase(nil)
             }
         }
     }

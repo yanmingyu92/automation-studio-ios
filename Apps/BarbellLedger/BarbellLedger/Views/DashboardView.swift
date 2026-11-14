@@ -152,7 +152,14 @@ struct WorkoutDetailView: View {
     @Bindable var workout: Workout
     @State private var confirmDelete = false
 
+    /// Set before the model is deleted so the body stops reading it; SwiftData traps on access to a deleted, saved model.
+    @State private var isDeleted = false
+
     var body: some View {
+        if isDeleted { Color.clear } else { content }
+    }
+
+    @ViewBuilder private var content: some View {
         List {
             Section {
                 TextField("Workout name", text: $workout.name)
@@ -194,6 +201,7 @@ struct WorkoutDetailView: View {
         }
         .confirmationDialog("Delete this workout?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete Workout", role: .destructive) {
+                isDeleted = true
                 modelContext.delete(workout)
                 try? modelContext.save()
                 dismiss()

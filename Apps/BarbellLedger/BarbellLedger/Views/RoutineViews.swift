@@ -79,7 +79,14 @@ struct RoutineDetailView: View {
 
     private var activeWorkout: Workout? { workouts.first(where: \.isActive) }
 
+    /// Set before the model is deleted so the body stops reading it; SwiftData traps on access to a deleted, saved model.
+    @State private var isDeleted = false
+
     var body: some View {
+        if isDeleted { Color.clear } else { content }
+    }
+
+    @ViewBuilder private var content: some View {
         List {
             Section {
                 TextField("Routine name", text: $routine.name)
@@ -144,6 +151,7 @@ struct RoutineDetailView: View {
         .fullScreenCover(item: $presentedWorkout) { WorkoutSessionView(workout: $0) }
         .confirmationDialog("Delete this routine?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete Routine", role: .destructive) {
+                isDeleted = true
                 modelContext.delete(routine)
                 try? modelContext.save()
                 dismiss()
