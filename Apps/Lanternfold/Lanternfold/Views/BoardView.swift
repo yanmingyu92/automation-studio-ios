@@ -44,6 +44,10 @@ struct BoardView: View {
     @State private var strokeStart: Int?
     @State private var strokeLast: Int?
     @State private var strokeMode = StrokeMode.undecided
+    @GestureState private var touching = false
+    /// Set when the garden is solved while on screen; drives the lighting-up sequence.
+    @State private var celebrating = false
+    @State private var hintPulse = false
 
     private var size: Int { session.puzzle.size }
 
@@ -72,12 +76,39 @@ struct BoardView: View {
                     .stroke(Palette.boardLine, lineWidth: max(3, step * 0.08))
             }
             .contentShape(Rectangle())
+            .overlay {
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .fill(Palette.glow.opacity(celebrating ? 0.16 : 0))
+                    .allowsHitTesting(false)
+            }
             .gesture(interactive ? stroke(step: step) : nil)
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .aspectRatio(1, contentMode: .fit)
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Garden, \(size) by \(size)")
+        .onChange(of: session.isComplete) { _, done in
+            guard done else { return }
+            if reduceMotion {
+                celebrating = true
+            } else {
+                withAnimation(.easeInOut(duration: 0.7).delay(0.3)) { celebrating = true }
+            }
+        }
+        .onChange(of: touching) { _, active in
+            // The system cancelled the touch (no end event): close the stroke so undo keeps working.
+            if !active, strokeStart != nil {
+                session.endGroup()
+                strokeStart = nil
+                strokeLast = nil
+                strokeMode = .undecided
+            }
+        }
+        .onChange(of: session.hint) { _, hint in
+            hintPulse = false
+            guard hint != nil, !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) { hintPulse = true }
+        }
     }
 
     // MARK: Cells
@@ -90,11 +121,13 @@ struct BoardView: View {
         let isTarget = session.hint?.targets.contains(cell) ?? false
         let inContext = session.hint?.context.contains(cell) ?? false
         let hintActive = session.hint != nil
+        let still = reduceMotion
 
         ZStack {
             Palette.plot(session.puzzle.regions[cell])
+            LinearGradient(colors: [.white.opacity(0.14), .clear], startPoint: .top, endPoint: .bottom)
             if hintActive && !inContext && !isTarget {
-                Palette.background.opacity(0.45)
+                Color.black.opacity(0.34)
             }
             if isStone {
                 stoneView(cell, step: step, inConflict: inConflict)
@@ -102,8 +135,18 @@ struct BoardView: View {
                 switch mark {
                 case .lantern:
                     LanternGlyph(glowing: session.isComplete)
-                        .padding(step * 0.04)
+                        .padding(step * 0.02)
+                        .keyframeAnimator(initialValue: 1.0, trigger: celebrating) { content, scale in
+                            content.scaleEffect(still ? 1 : scale)
+                        } keyframes: { _ in
+                            LinearKeyframe(1.0, duration: 0.02 + Double(cell / size) * 0.08)
+                            SpringKeyframe(1.3, duration: 0.18)
+                            SpringKeyframe(1.0, duration: 0.3)
+                        }
                         .transition(reduceMotion ? .opacity : .scale(scale: 0.4).combined(with: .opacity))
+                    if interactive && !reduceMotion && !session.isComplete {
+                        LightRing()
+                    }
                     if inConflict {
                         Circle()
                             .stroke(Palette.conflict, lineWidth: max(2, step * 0.06))
@@ -112,6 +155,8 @@ struct BoardView: View {
                 case .cross:
                     CrossGlyph()
                         .stroke(Palette.ink.opacity(0.6), style: StrokeStyle(lineWidth: max(1.5, step * 0.045), lineCap: .round))
+                        .opacity(session.isComplete ? 0.18 : 1)
+                        .animation(reduceMotion ? nil : .easeOut(duration: 0.5), value: session.isComplete)
                 case .blank:
                     if dimBlocked && !session.isComplete && session.blocked.contains(cell) {
                         Circle()
@@ -122,8 +167,10 @@ struct BoardView: View {
             }
             if isTarget {
                 RoundedRectangle(cornerRadius: step * 0.14, style: .continuous)
-                    .stroke(Color.accentColor, lineWidth: max(3, step * 0.08))
+                    .stroke(Palette.glow, lineWidth: max(2.5, step * 0.06))
                     .padding(step * 0.07)
+                    .shadow(color: Palette.glow.opacity(0.8), radius: 4)
+                    .opacity(hintPulse ? 0.55 : 1)
             }
         }
         .animation(reduceMotion ? nil : .spring(duration: 0.22), value: mark)
@@ -178,6 +225,7 @@ struct BoardView: View {
 
     private func stroke(step: CGFloat) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .local)
+            .updating($touching) { _, state, _ in state = true }
             .onChanged { value in
                 guard !session.isComplete, let cell = cell(at: value.location, step: step) else { return }
                 guard let start = strokeStart else {
@@ -231,9 +279,9 @@ struct BoardView: View {
 
     private func feedback(for cell: Int) {
         if session.isComplete {
-            Haptics.solved()
+            Haptics.solved(lanterns: size)
         } else if session.marks[cell] == .lantern {
-            Haptics.lantern()
+            Haptics.lantern(column: cell % size)
         } else {
             Haptics.mark()
         }
@@ -271,7 +319,7 @@ private struct CellActions: ViewModifier {
 
     private func announce() {
         if session.isComplete {
-            Haptics.solved()
+            Haptics.solved(lanterns: session.puzzle.size)
             AccessibilityNotification.Announcement("Garden lit. Puzzle solved.").post()
         }
     }

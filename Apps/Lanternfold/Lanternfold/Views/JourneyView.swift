@@ -24,40 +24,71 @@ struct JourneyView: View {
     private func packCard(_ pack: JourneyPack) -> some View {
         let prefix = "journey:\(pack.index):"
         let solved = records.filter { $0.isComplete && $0.key.hasPrefix(prefix) }.count
-        let locked = !pack.isFree && !store.isPro
+        let paid = !pack.isFree && !store.isPro
         return Button {
-            if locked {
-                navigator.showingPaywall = true
-            } else {
-                navigator.open(.pack(pack.index))
-            }
+            navigator.open(.pack(pack.index))
         } label: {
             Card {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text(pack.name)
-                            .font(.headline)
-                            .foregroundStyle(Palette.ink)
-                        Spacer()
-                        if locked {
-                            Pill(text: "Full Garden", systemImage: "lock.fill")
-                        } else {
-                            Image(systemName: "chevron.right").foregroundStyle(.tertiary)
+                HStack(spacing: 14) {
+                    PackThumbnail(size: pack.size, tintIndex: pack.index)
+                        .frame(width: 60, height: 60)
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text(pack.name)
+                                .font(.headline)
+                                .foregroundStyle(Palette.ink)
+                            Spacer()
+                            if paid {
+                                Pill(text: "\(PuzzleSource.freeSampleLevels) free · Full Garden", systemImage: "lock.fill")
+                            }
                         }
+                        Text("\(pack.size)×\(pack.size) · \(pack.blurb)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        ProgressView(value: Double(solved), total: Double(pack.levelCount))
+                            .tint(Palette.plot(pack.index))
+                            .accessibilityHidden(true)
+                        Text("\(solved) of \(pack.levelCount) solved")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
-                    Text("\(pack.size)×\(pack.size) · \(pack.blurb)")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    ProgressView(value: Double(solved), total: Double(pack.levelCount))
-                        .accessibilityHidden(true)
-                    Text("\(solved) of \(pack.levelCount) solved")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                 }
             }
         }
         .buttonStyle(.plain)
-        .accessibilityHint(locked ? "Opens the Full Garden purchase" : "Shows the gardens in this pack")
+        .accessibilityHint(paid ? "The first \(PuzzleSource.freeSampleLevels) gardens are free; the rest need the Full Garden" : "Shows the gardens in this pack")
+    }
+}
+
+/// A tiny garden in the pack's size and colour.
+struct PackThumbnail: View {
+    let size: Int
+    let tintIndex: Int
+
+    var body: some View {
+        Canvas { context, canvas in
+            let step = canvas.width / CGFloat(size)
+            for row in 0..<size {
+                for column in 0..<size {
+                    let plot = (row / 2 + column / 3 + tintIndex) % 3 == 0 ? tintIndex : tintIndex + 1 + (row / 2 + column / 3) % 3
+                    let rect = CGRect(x: CGFloat(column) * step, y: CGFloat(row) * step, width: step + 0.5, height: step + 0.5)
+                    context.fill(Path(rect), with: .color(Palette.plot(plot)))
+                }
+            }
+            for line in 1..<size {
+                var path = Path()
+                path.move(to: CGPoint(x: CGFloat(line) * step, y: 0))
+                path.addLine(to: CGPoint(x: CGFloat(line) * step, y: canvas.height))
+                path.move(to: CGPoint(x: 0, y: CGFloat(line) * step))
+                path.addLine(to: CGPoint(x: canvas.width, y: CGFloat(line) * step))
+                context.stroke(path, with: .color(Palette.boardLine.opacity(0.25)), lineWidth: 0.5)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Palette.boardLine, lineWidth: 2)
+        }
+        .accessibilityHidden(true)
     }
 }
 
@@ -92,23 +123,33 @@ struct PackView: View {
     private func levelButton(_ level: Int, pack: JourneyPack, source: PuzzleSource, record: PuzzleRecord?) -> some View {
         let solved = record?.isComplete == true
         let started = record?.isStarted == true && !solved
-        let status = solved ? "solved" : (started ? "in progress" : "not started")
+        let locked = !source.isUnlocked(isPro: store.isPro)
+        let status = locked ? "needs the Full Garden" : (solved ? "solved" : (started ? "in progress" : "not started"))
+        let accent = Palette.plot(pack.index)
         return Button {
             navigator.play(source, isPro: store.isPro)
         } label: {
-            VStack(spacing: 4) {
+            VStack(spacing: 2) {
                 Text("\(level + 1)")
                     .font(.title3.bold())
-                Image(systemName: solved ? "checkmark.circle.fill" : (started ? "circle.lefthalf.filled" : "circle"))
-                    .font(.footnote)
-                    .foregroundStyle(solved ? Color.accentColor : Color.secondary)
+                if locked {
+                    Image(systemName: "lock.fill").font(.caption2).foregroundStyle(.secondary)
+                } else if solved, let record {
+                    Text(Clock.text(record.elapsed)).font(.caption2.monospacedDigit())
+                } else {
+                    Image(systemName: started ? "circle.lefthalf.filled" : "circle")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
             }
             .frame(maxWidth: .infinity, minHeight: 60)
-            .background(solved ? Color.accentColor.opacity(0.16) : Palette.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .background(solved ? accent : Palette.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(Palette.ink.opacity(0.1), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(solved ? Palette.boardLine.opacity(0.5) : Palette.ink.opacity(0.12), lineWidth: solved ? 1.5 : 1)
             }
-            .foregroundStyle(Palette.ink)
+            .foregroundStyle(solved ? Palette.boardLine : Palette.ink)
+            .opacity(locked ? 0.6 : 1)
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Garden \(level + 1), \(pack.difficulty(level: level).title), \(status)")

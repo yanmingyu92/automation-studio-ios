@@ -55,9 +55,9 @@ struct NewFindingView: View {
             severity: severity,
             sortOrder: project.findings.count
         )
-        finding.project = project
-        project.updatedAt = .now
         modelContext.insert(finding)
+        project.findings.append(finding)
+        project.updatedAt = .now
         do {
             try modelContext.save()
             dismiss()

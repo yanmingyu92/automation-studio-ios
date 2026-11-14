@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0315BBF7166ADA9800F3462C /* PuzzleSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C000EBBAC38CC299E2CBE74E /* PuzzleSolver.swift */; };
+		041C77D0D4CD6F608B7DE6C5 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB8C15965BDF4ADAA6E6ABA /* ReminderScheduler.swift */; };
 		1D1722633E94C286F2A76FCF /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C380E202F3B7C9A8A386CB2 /* PaywallView.swift */; };
+		2FEF5FEA4137569B8E60488D /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B3F21211D834F4E37A2DD7 /* SoundPlayer.swift */; };
 		40AA3AA8343AD7277C734743 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC97ED7BF7E650B44F288AC1 /* Theme.swift */; };
 		41117DFDC990A5E3A9AFC386 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7354677475D4BC4226511830 /* StoreManager.swift */; };
 		58CB7FF534ACCAB322E51673 /* PuzzleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC55A049DF0A8D89B0D76FD /* PuzzleGenerator.swift */; };
@@ -40,9 +42,11 @@
 		432EB70627270ED4FFD05AC9 /* LanternfoldApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternfoldApp.swift; sourceTree = "<group>"; };
 		4597343962EFBF681760512E /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		49C5777786FA0F730037C60E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4BB8C15965BDF4ADAA6E6ABA /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
 		53F871F9162A2EEAE6E57288 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7354677475D4BC4226511830 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		735BE7C592834D5EC76C953C /* SeededRandom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeededRandom.swift; sourceTree = "<group>"; };
+		81B3F21211D834F4E37A2DD7 /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
 		A5724FEC0A6420DF377521D4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		ADF410618B2415FFA590EB29 /* Lanternfold.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Lanternfold.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4B114AEF2B71CA7AE291142 /* ProgressExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressExport.swift; sourceTree = "<group>"; };
@@ -61,6 +65,8 @@
 			isa = PBXGroup;
 			children = (
 				B4B114AEF2B71CA7AE291142 /* ProgressExport.swift */,
+				4BB8C15965BDF4ADAA6E6ABA /* ReminderScheduler.swift */,
+				81B3F21211D834F4E37A2DD7 /* SoundPlayer.swift */,
 				7354677475D4BC4226511830 /* StoreManager.swift */,
 			);
 			path = Services;
@@ -226,9 +232,11 @@
 				58CB7FF534ACCAB322E51673 /* PuzzleGenerator.swift in Sources */,
 				77E832AB3CECC797DCC8F4D7 /* PuzzleRecord.swift in Sources */,
 				0315BBF7166ADA9800F3462C /* PuzzleSolver.swift in Sources */,
+				041C77D0D4CD6F608B7DE6C5 /* ReminderScheduler.swift in Sources */,
 				CFF2F48F80DD7AD15E99AD6C /* RulesView.swift in Sources */,
 				C0A06E6E6EFF325C412D522D /* SeededRandom.swift in Sources */,
 				A1F9601D5C4188595C0E7DCB /* SettingsView.swift in Sources */,
+				2FEF5FEA4137569B8E60488D /* SoundPlayer.swift in Sources */,
 				75B862DBB141002133E6F0E0 /* StatsView.swift in Sources */,
 				41117DFDC990A5E3A9AFC386 /* StoreManager.swift in Sources */,
 				40AA3AA8343AD7277C734743 /* Theme.swift in Sources */,

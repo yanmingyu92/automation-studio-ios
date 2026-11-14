@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftData
 import SwiftUI
 
@@ -12,6 +13,12 @@ struct GameView: View {
     @State private var session: GameSession?
     @State private var failure: String?
     @State private var confirmingClear = false
+    @State private var solvedAt: Date?
+    @State private var reminderNote: String?
+    @Query private var records: [PuzzleRecord]
+    @Environment(\.requestReview) private var requestReview
+    @AppStorage("lastReviewRequest") private var lastReviewRequest = 0.0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Group {
@@ -48,13 +55,13 @@ struct GameView: View {
         .task { await load() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
-                session?.resume()
+                if !navigator.showingRules && !navigator.showingPaywall { session?.resume() }
             } else {
                 session?.pause()
                 try? context.save()
             }
         }
-        .onChange(of: navigator.showingRules) { _, showing in
+        .onChange(of: navigator.showingRules || navigator.showingPaywall) { _, showing in
             if showing { session?.pause() } else if scenePhase == .active { session?.resume() }
         }
         .onDisappear {
@@ -74,8 +81,7 @@ struct GameView: View {
         do {
             if let existing = try context.fetch(descriptor).first {
                 if let restored = GameSession(source: source, record: existing) {
-                    session = restored
-                    restored.resume()
+                    start(restored)
                     return
                 }
                 context.delete(existing)
@@ -89,23 +95,43 @@ struct GameView: View {
                 failure = "The saved puzzle data is unreadable."
                 return
             }
-            session = fresh
-            fresh.resume()
+            start(fresh)
         } catch {
             failure = error.localizedDescription
+        }
+    }
+
+    private func start(_ session: GameSession) {
+        let context = context
+        session.onPersist = { try? context.save() }
+        self.session = session
+        if !navigator.showingRules && !navigator.showingPaywall {
+            session.resume()
         }
     }
 
     // MARK: Play
 
     private func play(_ session: GameSession) -> some View {
+        GeometryReader { screen in
+            playContent(session, boardLimit: max(240, min(720, screen.size.height - 230)))
+        }
+    }
+
+    private func playContent(_ session: GameSession, boardLimit: CGFloat) -> some View {
         ScrollView {
             VStack(spacing: 14) {
                 statusRow(session)
                 BoardView(session: session)
-                    .frame(maxWidth: 560)
+                    .frame(maxWidth: boardLimit)
+                    .overlay {
+                        if let solvedAt, !reduceMotion {
+                            Fireflies(start: solvedAt)
+                        }
+                    }
                 if session.isComplete {
                     solvedCard(session)
+                        .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
                 } else {
                     if let hint = session.hint {
                         hintCard(hint, session: session)
@@ -115,6 +141,13 @@ struct GameView: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity)
+            .animation(reduceMotion ? .easeInOut(duration: 0.2) : .spring(duration: 0.5).delay(0.9), value: session.isComplete)
+        }
+        .onChange(of: session.isComplete) { _, done in
+            guard done else { return }
+            solvedAt = .now
+            try? context.save()
+            afterSolve(session)
         }
         .confirmationDialog("Clear every mark and lantern?", isPresented: $confirmingClear, titleVisibility: .visible) {
             Button("Clear the garden", role: .destructive) { session.clearBoard() }
@@ -138,7 +171,7 @@ struct GameView: View {
                 }
             }
         }
-        .frame(maxWidth: 560)
+        .frame(maxWidth: 720)
     }
 
     private func controls(_ session: GameSession) -> some View {
@@ -163,7 +196,7 @@ struct GameView: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.large)
-        .frame(maxWidth: 560)
+        .frame(maxWidth: 720)
     }
 
     private func hintCard(_ hint: ActiveHint, session: GameSession) -> some View {
@@ -175,7 +208,10 @@ struct GameView: View {
                 HStack {
                     Button("Do it for me") {
                         session.applyHint()
-                        if session.isComplete { Haptics.solved() }
+                        if session.isComplete {
+                            Haptics.solved(lanterns: session.puzzle.size)
+                            AccessibilityNotification.Announcement("Garden lit. Puzzle solved.").post()
+                        }
                     }
                     .buttonStyle(.borderedProminent)
                     Button("Dismiss") { session.hint = nil }
@@ -183,33 +219,67 @@ struct GameView: View {
                 }
             }
         }
-        .frame(maxWidth: 560)
+        .frame(maxWidth: 720)
         .onAppear {
             AccessibilityNotification.Announcement(hint.message).post()
         }
     }
 
+    private var isOnDayDaily: Bool {
+        if case .daily(let day) = source { return day == DayStamp.today }
+        return false
+    }
+
+    /// Refreshes reminders and, at a rare and happy moment, asks for an App Store rating.
+    private func afterSolve(_ session: GameSession) {
+        if isOnDayDaily {
+            Task { await ReminderScheduler.refresh(todaySolved: true) }
+        }
+        let summary = ProgressSummary(records: records)
+        var finishedPack = false
+        if case .journey(let pack, let level) = source, let item = JourneyPack.all.first(where: { $0.index == pack }) {
+            finishedPack = level + 1 == item.levelCount
+        }
+        let goodMoment = (isOnDayDaily && summary.currentStreak >= 3) || finishedPack
+        let sinceLast = Date.now.timeIntervalSince1970 - lastReviewRequest
+        guard session.hintsUsed == 0, summary.solvedTotal >= 5, goodMoment, sinceLast > 60 * 86_400 else { return }
+        lastReviewRequest = Date.now.timeIntervalSince1970
+        Task {
+            try? await Task.sleep(for: .seconds(2.5))
+            requestReview()
+        }
+    }
+
     private func solvedCard(_ session: GameSession) -> some View {
-        Card {
+        let summary = ProgressSummary(records: records)
+        let hints = session.hintsUsed
+        let hintText = hints == 0 ? "no hints" : (hints == 1 ? "1 hint" : "\(hints) hints")
+        return Card {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Garden lit")
-                    .font(.title2.bold())
-                    .accessibilityAddTraits(.isHeader)
-                let hints = session.hintsUsed
-                Text("Solved in \(Clock.text(session.elapsed())) with \(hints == 0 ? "no hints" : (hints == 1 ? "1 hint" : "\(hints) hints")).")
+                HStack(spacing: 10) {
+                    LanternGlyph(glowing: true).frame(width: 40, height: 40)
+                    Text("Garden lit")
+                        .font(.title2.bold())
+                        .accessibilityAddTraits(.isHeader)
+                }
+                Text("Solved in \(Clock.text(session.elapsed())) with \(hintText).")
                     .foregroundStyle(.secondary)
-                    .accessibilityLabel("Solved in \(Clock.spoken(session.elapsed())) with \(hints == 0 ? "no hints" : (hints == 1 ? "1 hint" : "\(hints) hints"))")
+                    .accessibilityLabel("Solved in \(Clock.spoken(session.elapsed())) with \(hintText)")
                 if case .daily = source, session.record.completedOnDay {
-                    Label("Counts toward your daily streak", systemImage: "flame.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.accentColor)
+                    Label(
+                        summary.currentStreak <= 1 ? "Your streak has begun" : "\(summary.currentStreak)-day streak · longest \(summary.longestStreak)",
+                        systemImage: "flame.fill"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.accentColor)
                 }
                 HStack {
                     if let next = source.next {
+                        let open = next.isUnlocked(isPro: store.isPro)
                         Button {
                             navigator.play(next, isPro: store.isPro, replacingCurrent: true)
                         } label: {
-                            Label("Next garden", systemImage: "arrow.right")
+                            Label(open ? "Next garden" : "More gardens · Full Garden", systemImage: open ? "arrow.right" : "lock.open.fill")
                         }
                         .buttonStyle(.borderedProminent)
                     } else {
@@ -220,13 +290,39 @@ struct GameView: View {
                         }
                         .buttonStyle(.borderedProminent)
                     }
-                    ShareLink(item: session.shareText) {
-                        Label("Share result", systemImage: "square.and.arrow.up")
+                    ShareLink(item: session.shareText(streak: isOnDayDaily ? summary.currentStreak : 0)) {
+                        Label("Share", systemImage: "square.and.arrow.up")
                     }
                     .buttonStyle(.bordered)
                 }
+                if isOnDayDaily {
+                    if let reminderNote {
+                        Text(reminderNote).font(.footnote).foregroundStyle(.secondary)
+                    } else if !ReminderScheduler.isEnabled {
+                        Button {
+                            Task {
+                                let granted = await ReminderScheduler.enable()
+                                await ReminderScheduler.refresh(todaySolved: true)
+                                reminderNote = granted
+                                    ? "You'll get a reminder when tomorrow's garden is ready."
+                                    : "Notifications are off for Lanternfold. You can allow them in iOS Settings."
+                            }
+                        } label: {
+                            Label("Remind me about tomorrow's garden", systemImage: "bell")
+                        }
+                        .font(.subheadline)
+                    }
+                    if !store.isPro {
+                        Button {
+                            navigator.showingPaywall = true
+                        } label: {
+                            Label("Want another? Endless is part of the Full Garden", systemImage: "infinity")
+                        }
+                        .font(.subheadline)
+                    }
+                }
             }
         }
-        .frame(maxWidth: 560)
+        .frame(maxWidth: 720)
     }
 }

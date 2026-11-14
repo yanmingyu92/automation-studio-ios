@@ -68,6 +68,7 @@ struct FindingEditorView: View {
                                                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 12))
                                         }
                                     }
+                                    .buttonStyle(.borderless)
                                     .accessibilityLabel(photo.caption.isEmpty ? "View inspection photo" : "View photo: \(photo.caption)")
                                     .overlay(alignment: .topTrailing) {
                                         Button(role: .destructive) { photoToDelete = photo } label: {
@@ -76,6 +77,7 @@ struct FindingEditorView: View {
                                                 .symbolRenderingMode(.palette)
                                                 .foregroundStyle(.white, .red)
                                         }
+                                        .buttonStyle(.borderless)
                                         .accessibilityLabel("Delete photo")
                                         .padding(5)
                                     }
@@ -92,25 +94,21 @@ struct FindingEditorView: View {
                         .padding(.vertical, 4)
                     }
                 }
-                Menu {
-                    Button {
-                        photoSelection = []
-                        requestCamera()
-                    } label: {
-                        Label("Take photo", systemImage: "camera")
-                    }
-                    Button {
-                        isPhotoPickerPresented = true
-                    } label: {
-                        Label("Choose from library", systemImage: "photo.on.rectangle")
-                    }
+                // Two explicit rows instead of a Menu: a Menu inside a Form row only responds to taps on its
+                // label on some iOS versions, which made the row feel dead.
+                Button {
+                    photoSelection = []
+                    requestCamera()
                 } label: {
-                    // Full-width hit area so a tap anywhere on the row opens the menu.
-                    Label("Add photos", systemImage: "plus")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
+                    Label("Take photo", systemImage: "camera")
                 }
-                .accessibilityHint("Capture or import inspection evidence")
+                .accessibilityHint("Capture inspection evidence with the camera")
+                Button {
+                    isPhotoPickerPresented = true
+                } label: {
+                    Label("Choose from library", systemImage: "photo.on.rectangle")
+                }
+                .accessibilityHint("Import inspection evidence from your photo library")
             } header: {
                 Text("Photo evidence")
             } footer: {
@@ -124,6 +122,8 @@ struct FindingEditorView: View {
                             Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                                 .font(.system(size: 38))
                         }
+                        // Borderless: default-style buttons sharing one Form row all fire on a single row tap.
+                        .buttonStyle(.borderless)
                         .accessibilityLabel(player.isPlaying ? "Pause voice note" : "Play voice note")
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Recorded audio")
@@ -136,6 +136,7 @@ struct FindingEditorView: View {
                         Button(role: .destructive) { confirmAudioDeletion = true } label: {
                             Image(systemName: "trash")
                         }
+                        .buttonStyle(.borderless)
                         .accessibilityLabel("Delete voice note")
                     }
                 } else {
@@ -368,11 +369,13 @@ struct FindingEditorView: View {
     private func addPhoto(data: Data) throws {
         let stored = try LocalFileStore.persistImage(data: data)
         let photo = FindingPhoto(fileName: stored.fileName, thumbnailFileName: stored.thumbnailFileName)
-        photo.finding = finding
         modelContext.insert(photo)
+        // Append on the to-many side: on iOS 17/18 setting only the inverse does not refresh views observing `photos`.
+        finding.photos.append(photo)
         do {
             try saveChanges()
         } catch {
+            finding.photos.removeAll { $0.id == photo.id }
             modelContext.delete(photo)
             LocalFileStore.deletePhoto(photo)
             throw error

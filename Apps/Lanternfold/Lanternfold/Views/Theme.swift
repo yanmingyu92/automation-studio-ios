@@ -19,25 +19,28 @@ enum Palette {
     static let background = Color(light: 0xF7F3EA, dark: 0x101226)
     static let surface = Color(light: 0xFFFDF8, dark: 0x1B1E3A)
     static let ink = Color(light: 0x1F2240, dark: 0xF1ECDD)
-    static let boardLine = Color(light: 0x1F2240, dark: 0x0A0B18)
+    static let boardLine = Color(light: 0x1F2240, dark: 0x05060F)
     static let conflict = Color(light: 0xC62828, dark: 0xFF6B6B)
     static let glow = Color(light: 0xFFC83D, dark: 0xFFD466)
+    static let lanternCore = Color(light: 0xFFF3B0, dark: 0xFFF6C4)
+    static let nightTop = Color(light: 0x2D2A5A, dark: 0x2D2A5A)
+    static let nightBottom = Color(light: 0x14163A, dark: 0x14163A)
     static let lanternTop = Color(light: 0xFFD45C, dark: 0xFFE08A)
     static let lanternBottom = Color(light: 0xE4572E, dark: 0xF0703F)
     static let lanternFrame = Color(light: 0x3A2A1E, dark: 0x1E1410)
-    static let stone = Color(light: 0x4A4F63, dark: 0x878DA6)
+    static let stone = Color(light: 0x3E4358, dark: 0xECE8DA)
     static let stoneText = Color(light: 0xFFFFFF, dark: 0x101226)
 
     private static let plots: [(name: String, color: Color)] = [
-        ("amber", Color(light: 0xF6D58A, dark: 0x7A5A1E)),
-        ("rose", Color(light: 0xF4B6C0, dark: 0x7B3A48)),
-        ("sky", Color(light: 0xA9D3F2, dark: 0x2F5878)),
-        ("mint", Color(light: 0xB4E3C3, dark: 0x2E6146)),
-        ("lilac", Color(light: 0xCDBDF0, dark: 0x51407F)),
-        ("peach", Color(light: 0xF8C3A0, dark: 0x80492B)),
-        ("teal", Color(light: 0x9EDBD8, dark: 0x235F5E)),
-        ("sand", Color(light: 0xE3DCC6, dark: 0x5E5744)),
-        ("slate", Color(light: 0xBCC6D6, dark: 0x414B5E))
+        ("amber", Color(light: 0xF9D276, dark: 0xC9922E)),
+        ("rose", Color(light: 0xF5A9B8, dark: 0xB84A68)),
+        ("sky", Color(light: 0x9CCBF5, dark: 0x3F8FD0)),
+        ("mint", Color(light: 0xA8E0B5, dark: 0x4FA873)),
+        ("lilac", Color(light: 0xC9B5F2, dark: 0x7A5FCC)),
+        ("peach", Color(light: 0xF9B98F, dark: 0xD9774A)),
+        ("teal", Color(light: 0x7FD3CF, dark: 0x1C8085)),
+        ("sand", Color(light: 0xE6DFCB, dark: 0xA39874)),
+        ("slate", Color(light: 0xB3BDD0, dark: 0x566384))
     ]
 
     static func plot(_ index: Int) -> Color {
@@ -59,35 +62,87 @@ struct LanternGlyph: View {
             ZStack {
                 Circle()
                     .fill(RadialGradient(
-                        colors: [Palette.glow.opacity(glowing ? 0.95 : 0.7), Palette.glow.opacity(0)],
-                        center: .center, startRadius: side * 0.08, endRadius: side * (glowing ? 0.62 : 0.5)
+                        colors: [Palette.glow.opacity(glowing ? 0.95 : 0.75), Palette.glow.opacity(0)],
+                        center: .center, startRadius: side * 0.06, endRadius: side * (glowing ? 0.64 : 0.52)
                     ))
-                VStack(spacing: 0) {
-                    RoundedRectangle(cornerRadius: side * 0.03)
+                VStack(spacing: -side * 0.01) {
+                    Capsule()
                         .fill(Palette.lanternFrame)
-                        .frame(width: side * 0.3, height: side * 0.08)
-                    RoundedRectangle(cornerRadius: side * 0.17)
-                        .fill(LinearGradient(colors: [Palette.lanternTop, Palette.lanternBottom], startPoint: .top, endPoint: .bottom))
+                        .frame(width: side * 0.22, height: side * 0.06)
+                    Ellipse()
+                        .fill(RadialGradient(
+                            colors: [Palette.lanternCore, Palette.lanternTop, Palette.lanternBottom],
+                            center: UnitPoint(x: 0.5, y: 0.42), startRadius: 0, endRadius: side * 0.3
+                        ))
                         .overlay {
-                            HStack(spacing: side * 0.1) {
-                                ForEach(0..<2, id: \.self) { _ in
-                                    Capsule().fill(Palette.lanternFrame.opacity(0.28)).frame(width: side * 0.025)
-                                }
+                            ZStack {
+                                Ellipse().stroke(Palette.lanternFrame.opacity(0.3), lineWidth: max(0.75, side * 0.018))
+                                    .frame(width: side * 0.26)
+                                Ellipse().stroke(Palette.lanternFrame.opacity(0.3), lineWidth: max(0.75, side * 0.018))
+                                    .frame(width: side * 0.06)
+                                Ellipse().stroke(Palette.lanternFrame.opacity(0.6), lineWidth: max(1, side * 0.025))
                             }
-                            .padding(.vertical, side * 0.04)
                         }
-                        .overlay {
-                            RoundedRectangle(cornerRadius: side * 0.17)
-                                .stroke(Palette.lanternFrame.opacity(0.55), lineWidth: max(1, side * 0.025))
-                        }
-                        .frame(width: side * 0.46, height: side * 0.44)
-                    RoundedRectangle(cornerRadius: side * 0.03)
+                        .frame(width: side * 0.48, height: side * 0.42)
+                    Capsule()
                         .fill(Palette.lanternFrame)
-                        .frame(width: side * 0.24, height: side * 0.07)
+                        .frame(width: side * 0.18, height: side * 0.055)
+                    Capsule()
+                        .fill(Palette.lanternBottom)
+                        .frame(width: side * 0.03, height: side * 0.09)
                 }
+                .offset(y: side * 0.03)
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
+        .accessibilityHidden(true)
+    }
+}
+
+/// A ring of light that expands once when a lantern is placed.
+struct LightRing: View {
+    @State private var expanded = false
+
+    var body: some View {
+        Circle()
+            .stroke(Palette.glow, lineWidth: 3)
+            .scaleEffect(expanded ? 1.5 : 0.4)
+            .opacity(expanded ? 0 : 0.9)
+            .onAppear {
+                withAnimation(.easeOut(duration: 0.4)) { expanded = true }
+            }
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+}
+
+/// Fireflies that drift up over a solved garden for a few seconds.
+struct Fireflies: View {
+    let start: Date
+    static let duration = 2.6
+
+    var body: some View {
+        TimelineView(.animation) { timeline in
+            Canvas { context, size in
+                let t = timeline.date.timeIntervalSince(start)
+                guard t >= 0, t < Self.duration else { return }
+                for index in 0..<26 {
+                    let seed = Double(index)
+                    let delay = (seed.truncatingRemainder(dividingBy: 7)) * 0.09
+                    let life = (t - delay) / 1.7
+                    guard life > 0, life < 1 else { continue }
+                    let baseX = (sin(seed * 12.9898) * 0.5 + 0.5) * size.width
+                    let x = baseX + sin(t * 3 + seed) * 10
+                    let y = size.height * (0.95 - life * (0.55 + 0.4 * (cos(seed * 4.1) * 0.5 + 0.5)))
+                    let radius = 2 + (seed.truncatingRemainder(dividingBy: 3))
+                    let alpha = sin(life * .pi)
+                    let rect = CGRect(x: x - radius, y: y - radius, width: radius * 2, height: radius * 2)
+                    context.fill(Path(ellipseIn: rect.insetBy(dx: -radius, dy: -radius)), with: .color(Palette.glow.opacity(alpha * 0.25)))
+                    context.fill(Path(ellipseIn: rect), with: .color(Palette.lanternCore.opacity(alpha)))
+                }
+            }
+        }
+        .allowsHitTesting(false)
         .accessibilityHidden(true)
     }
 }
@@ -138,6 +193,7 @@ struct Pill: View {
     }
 }
 
+/// Touch and sound feedback for moves; each part can be switched off in Settings.
 @MainActor
 enum Haptics {
     private static var enabled: Bool {
@@ -145,16 +201,19 @@ enum Haptics {
     }
 
     static func mark() {
+        SoundPlayer.shared.mark()
         guard enabled else { return }
         UISelectionFeedbackGenerator().selectionChanged()
     }
 
-    static func lantern() {
+    static func lantern(column: Int) {
+        SoundPlayer.shared.lantern(step: column)
         guard enabled else { return }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 
-    static func solved() {
+    static func solved(lanterns: Int) {
+        SoundPlayer.shared.solved(notes: lanterns)
         guard enabled else { return }
         UINotificationFeedbackGenerator().notificationOccurred(.success)
     }
@@ -162,6 +221,7 @@ enum Haptics {
 
 enum SettingKey {
     static let haptics = "haptics"
+    static let sounds = "sounds"
     static let showConflicts = "showConflicts"
     static let dimBlocked = "dimBlocked"
     static let lanternFirst = "lanternFirst"

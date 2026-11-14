@@ -6,7 +6,7 @@ struct PaywallView: View {
     @Environment(StoreManager.self) private var store
 
     private let features: [(icon: String, title: String, detail: String)] = [
-        ("map.fill", "120 more Journey gardens", "Terrace, Orchard and Estate packs from 7×7 to 9×9."),
+        ("map.fill", "All 190 Journey gardens", "Every garden of the Terrace, Orchard and Estate packs, from 7×7 to 9×9."),
         ("infinity", "Endless mode", "Fresh, uniquely solvable gardens in any size and difficulty."),
         ("calendar", "The whole daily archive", "Replay every earlier daily garden, not only the last two."),
         ("hand.raised.fill", "Still no ads, no tracking", "One purchase. No subscription. Everything stays on your device.")
@@ -16,15 +16,18 @@ struct PaywallView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    HStack(spacing: 12) {
-                        LanternGlyph(glowing: true).frame(width: 64, height: 64)
-                        VStack(alignment: .leading) {
-                            Text("The Full Garden")
-                                .font(.largeTitle.bold())
-                            Text("Pay once, keep it forever.")
-                                .foregroundStyle(.secondary)
-                        }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Spacer(minLength: 64)
+                        Text("The Full Garden")
+                            .font(.largeTitle.bold())
+                            .foregroundStyle(.white)
+                        Text("Pay once, keep it forever.")
+                            .foregroundStyle(.white.opacity(0.8))
                     }
+                    .padding(18)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(NightSky())
+                    .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
                     .accessibilityElement(children: .combine)
                     .accessibilityAddTraits(.isHeader)
 
@@ -61,7 +64,7 @@ struct PaywallView: View {
                     }
                     .disabled(store.isPurchasing)
 
-                    Text("The daily garden, the last two days and 70 Journey gardens stay free.")
+                    Text("Made by a solo developer. No ads, ever. The daily garden, the last two days and the free Journey gardens stay free.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

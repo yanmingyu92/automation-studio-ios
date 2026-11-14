@@ -23,8 +23,9 @@ final class StoreManager {
             }
         }
         Task {
-            await loadProducts()
+            // Entitlements are local; check them first so a purchase unlocks even while offline.
             await refreshEntitlements()
+            await loadProducts()
         }
     }
 

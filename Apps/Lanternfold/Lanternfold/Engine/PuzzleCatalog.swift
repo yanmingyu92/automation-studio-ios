@@ -80,7 +80,7 @@ struct JourneyPack: Sendable, Identifiable {
 
     func difficulty(level: Int) -> Difficulty {
         let progress = Double(level) / Double(levelCount)
-        return progress < 0.35 ? .easy : (progress < 0.7 ? .medium : .hard)
+        return progress < 0.15 ? .easy : (progress < 0.6 ? .medium : .hard)
     }
 
     static let all: [JourneyPack] = [
@@ -102,6 +102,8 @@ enum PuzzleSource: Sendable, Hashable {
 
     /// Free players may open today's puzzle and the two days before it.
     static let freeArchiveDays = 2
+    /// The first gardens of every Full Garden pack are free to try.
+    static let freeSampleLevels = 3
 
     var key: String {
         switch self {
@@ -133,7 +135,7 @@ enum PuzzleSource: Sendable, Hashable {
         case .daily(let day):
             switch day.weekday {
             case 2: GeneratorRequest(size: 6, difficulty: .easy, stones: .none)
-            case 3: GeneratorRequest(size: 7, difficulty: .easy, stones: .allowed)
+            case 3: GeneratorRequest(size: 6, difficulty: .medium, stones: .allowed)
             case 4: GeneratorRequest(size: 7, difficulty: .medium, stones: .allowed)
             case 5: GeneratorRequest(size: 8, difficulty: .medium, stones: .allowed)
             case 6: GeneratorRequest(size: 8, difficulty: .hard, stones: .allowed)
@@ -167,8 +169,9 @@ enum PuzzleSource: Sendable, Hashable {
         switch self {
         case .daily(let day):
             return day <= today && today.days(since: day) <= Self.freeArchiveDays
-        case .journey(let pack, _):
-            return JourneyPack.all.first(where: { $0.index == pack })?.isFree ?? false
+        case .journey(let pack, let level):
+            guard let item = JourneyPack.all.first(where: { $0.index == pack }) else { return false }
+            return item.isFree || level < Self.freeSampleLevels
         case .endless:
             return false
         }
@@ -177,9 +180,13 @@ enum PuzzleSource: Sendable, Hashable {
     /// The puzzle that naturally follows this one, if any.
     var next: PuzzleSource? {
         guard case .journey(let pack, let level) = self,
-              let item = JourneyPack.all.first(where: { $0.index == pack }),
-              level + 1 < item.levelCount else { return nil }
-        return .journey(pack: pack, level: level + 1)
+              let item = JourneyPack.all.first(where: { $0.index == pack }) else { return nil }
+        if level + 1 < item.levelCount {
+            return .journey(pack: pack, level: level + 1)
+        }
+        // The last garden of a pack leads into the first garden of the next one.
+        guard JourneyPack.all.contains(where: { $0.index == pack + 1 }) else { return nil }
+        return .journey(pack: pack + 1, level: 0)
     }
 }
 

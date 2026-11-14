@@ -39,6 +39,8 @@ final class GameSession {
     private(set) var conflicts: Set<Int> = []
     private(set) var blocked: Set<Int> = []
     var hint: ActiveHint?
+    /// Called after every saved change so the owner can write the store to disk.
+    @ObservationIgnored var onPersist: (() -> Void)?
 
     private var undoStack: [[Change]] = []
     private var openGroup: [Change]?
@@ -139,11 +141,15 @@ final class GameSession {
 
     func clearBoard() {
         guard !isComplete, hasMarks else { return }
-        beginGroup()
-        for cell in marks.indices where marks[cell] != .blank {
-            set(cell, to: .blank)
-        }
+        // One mutation: clearing cell by cell could pass through the solved position.
         endGroup()
+        let group = marks.indices.filter { marks[$0] != .blank }.map { Change(cell: $0, before: marks[$0], after: .blank) }
+        for change in group {
+            marks[change.cell] = .blank
+        }
+        undoStack.append(group)
+        hint = nil
+        afterChange()
     }
 
     private func afterChange() {
@@ -197,15 +203,16 @@ final class GameSession {
 
     private func persist() {
         record.marksData = Data(marks.map(\.rawValue))
-        record.elapsed = banked
+        record.elapsed = elapsed()
         record.hintsUsed = hintsUsed
         record.updatedAt = .now
+        onPersist?()
     }
 
     // MARK: Hints
 
     func requestHint() {
-        guard !isComplete else { return }
+        guard !isComplete, hint == nil else { return }
         hintsUsed += 1
         hint = makeHint()
         persist()
@@ -306,8 +313,16 @@ final class GameSession {
 
     // MARK: Sharing
 
-    var shareText: String {
-        let hints = hintsUsed == 0 ? "no hints" : (hintsUsed == 1 ? "1 hint" : "\(hintsUsed) hints")
-        return "Lanternfold \(source.title) · \(puzzle.size)×\(puzzle.size) \(puzzle.difficulty.title)\n🏮 \(Clock.text(elapsed())) · \(hints)"
+    /// A spoiler-free result: the plot map of the garden, never the lantern positions.
+    func shareText(streak: Int) -> String {
+        let squares = ["🟨", "🟥", "🟦", "🟩", "🟪", "🟧", "🟫", "⬜", "⬛"]
+        var lines = ["Lanternfold \(source.title) · \(puzzle.size)×\(puzzle.size) \(puzzle.difficulty.title)"]
+        var result = "🏮 \(Clock.text(elapsed())) · " + (hintsUsed == 0 ? "no hints" : "💡×\(hintsUsed)")
+        if streak > 1 { result += " · 🔥\(streak)" }
+        lines.append(result)
+        for row in 0..<puzzle.size {
+            lines.append((0..<puzzle.size).map { squares[puzzle.regions[row * puzzle.size + $0] % squares.count] }.joined())
+        }
+        return lines.joined(separator: "\n")
     }
 }
